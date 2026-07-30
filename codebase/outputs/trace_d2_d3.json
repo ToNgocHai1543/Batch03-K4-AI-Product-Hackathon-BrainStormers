@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "session_key": "d2-d3",
+    "timestamp": "2026-07-31 00:22:44",
+    "call_mode": "offline_fallback",
+    "model_used": "fallback_simulation_engine",
+    "latency_ms": 3,
+    "input_chars": 37958,
+    "estimated_input_tokens": 9489,
+    "recap_count": 2,
+    "bridge_count": 1,
+    "has_citations": true
+  },
+  "output": {
+    "session_key": "d2-d3",
+    "has_citations": true,
+    "confidence_score": 0.92,
+    "recap": [
+      {
+        "id": "r2_1",
+        "point": "Mô hình Double Diamond: Tìm đúng vấn đề (Diamond 1) trước khi tìm giải pháp (Diamond 2).",
+        "citation": "Day 02, Slide 3",
+        "source_quote": "Giải pháp xuất sắc cho sai vấn đề còn tệ hơn không có giải pháp."
+      },
+      {
+        "id": "r2_2",
+        "point": "3 Cấp giải pháp Kỹ thuật: Rule (Luật tĩnh) ➔ Workflow (Chuỗi các bước) ➔ Agent (Tác nhân tự chủ).",
+        "citation": "Day 02, Slide 18",
+        "source_quote": "Luôn bắt đầu từ giải pháp đơn giản nhất bên trái, chỉ dịch sang bên phải khi giá trị tăng vượt độ phức tạp."
+      }
+    ],
+    "bridge": [
+      {
+        "id": "b2_1",
+        "from": "Workflow Patterns (Routing, Chaining)",
+        "from_ref": "Day 02, Slide 20",
+        "to": "Kiến trúc Orchestration Multi-Agent",
+        "to_ref": "Day 03, Slide 5",
+        "explanation": "Patterns Routing & Chaining của Day 02 chính là khối dựng sơ khai để điều phối chuỗi nhiều Agent làm việc song song ở Day 03."
+      }
+    ],
+    "checklist": [
+      {
+        "id": "c2_1",
+        "text": "Chốt xong 9 trường Problem Statement cho nhóm"
+      },
+      {
+        "id": "c2_2",
+        "text": "Xác định rõ mức Automation: Augment hay Automate"
+      }
+    ],
+    "quiz": [
+      {
+        "id": "q2_1",
+        "question": "Nguyên tắc Anthropic khuyến cáo về độ phức tạp khi xây dựng hệ thống AI là gì?",
+        "options": [
+          "A. Luôn dùng Multi-Agent để đạt kết quả ấn tượng",
+          "B. Luôn ưu tiên giải pháp đơn giản nhất (Prompting/Workflow), chỉ tăng độ phức tạp khi thực sự cần",
+          "C. Bỏ qua Rule-based vì đã cũ",
+          "D. Dùng model đắt nhất ở mọi công đoạn"
+        ],
+        "answer_index": 1,
+        "explanation": "Đúng! Anthropic nhấn mạnh ưu tiên giải pháp đơn giản nhất có thể giải quyết được bài toán (Slide 20 Day 02)."
+      }
+    ]
+  }
+}
