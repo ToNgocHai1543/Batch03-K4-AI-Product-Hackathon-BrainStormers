@@ -244,14 +244,13 @@ class LLMBridgeClient:
                 ]
             }
 
-    def generate_learning_bridge(self, session_key: str = 'd1-d2') -> Dict[str, Any]:
+    def generate_learning_bridge(self, session_key: str = 'd1-d2', mode: str = 'happy') -> Dict[str, Any]:
         """
-        Executes Prompt Chaining:
-        1. Loads context via DataLoader
-        2. Prompt Call 1: Generate Recap
-        3. Gate Check: Ensure citations are present
-        4. Prompt Call 2: Generate Bridge, Checklist & Quiz
-        5. Logs trace to codebase/outputs/trace_<session_key>.json
+        Executes Prompt Chaining or Experience Mode Simulation:
+        - mode 'happy': Normal flow with high confidence & citations
+        - mode 'low-confidence': Warning state with low confidence score (0.62) & audio noise alerts
+        - mode 'failure': Zero citation overlap state (0.0 confidence), triggering Graceful Fallback (HAX G10)
+        - mode 'correction': Triggers user error-correction modal (HAX G15)
         """
         start_time = time.time()
 
@@ -262,7 +261,7 @@ class LLMBridgeClient:
         api_result_raw = None
         call_mode = "offline_fallback"
 
-        if self.api_key:
+        if self.api_key and mode == 'happy':
             # Build Call 1 Prompt
             recap_prompt = self.recap_prompt_template.format(
                 prev_day_code=prompt_ctx['prev_day_code'],
@@ -296,7 +295,6 @@ class LLMBridgeClient:
         output_data = None
         if api_result_raw:
             try:
-                # Clean JSON fences if present
                 clean_json = re.sub(r'^```json\s*|\s*```$', '', api_result_raw.strip(), flags=re.MULTILINE)
                 output_data = json.loads(clean_json)
             except Exception as e:
@@ -304,6 +302,23 @@ class LLMBridgeClient:
 
         if not output_data:
             output_data = self._fallback_generate(session_key)
+
+        # Step 4: Apply Experience Mode Specific Adjustments
+        if mode == 'low-confidence':
+            output_data['confidence_score'] = 0.62
+            output_data['warning_type'] = 'low-confidence'
+            output_data['warning_message'] = 'Dữ liệu Transcript bị thiếu hoặc audio bị nhiễu (đoạn T04-012). Recap mang tính tham khảo, vui lòng kiểm tra lại Slide gốc!'
+        elif mode == 'failure':
+            output_data['confidence_score'] = 0.00
+            output_data['has_citations'] = False
+            output_data['overlap'] = False
+            output_data['error_code'] = 'ZERO_CITATION_OVERLAP'
+            output_data['warning_type'] = 'failure'
+            output_data['warning_message'] = 'AI không tìm thấy mối liên hệ đủ tin cậy giữa hai buổi học này (0% overlap citation). Vui lòng tiến thẳng vào bài học!'
+            output_data['recap'] = []
+            output_data['bridge'] = []
+        elif mode == 'correction':
+            output_data['trigger_correction_modal'] = True
 
         latency_ms = int((time.time() - start_time) * 1000)
 

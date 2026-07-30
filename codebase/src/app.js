@@ -42,10 +42,10 @@ async function renderCurrentSession() {
     showLoadingState();
 
     try {
-        // Step 1: Try fetching dynamic AI output from Backend API /api/session?pair=...
+        // Step 1: Try fetching dynamic AI output from Backend API /api/session?pair=...&mode=...
         let fetchedData = null;
         try {
-            const apiRes = await fetch(`/api/session?pair=${currentSessionKey}`);
+            const apiRes = await fetch(`/api/session?pair=${currentSessionKey}&mode=${currentExperienceState}`);
             if (apiRes.ok) {
                 const traceJson = await apiRes.json();
                 fetchedData = traceJson.output || traceJson;
@@ -339,7 +339,7 @@ function getHardcodedFallback(key) {
 // 3. Demo Controller & 4 Experience Paths
 // ==========================================================================
 
-function setExperienceState(state) {
+async function setExperienceState(state) {
     currentExperienceState = state;
 
     document.querySelectorAll('.state-btn').forEach(btn => {
@@ -351,10 +351,12 @@ function setExperienceState(state) {
 
     banner.className = 'status-banner hidden';
 
+    // Re-fetch data for the new experience mode
+    await renderCurrentSession();
+
     switch (state) {
         case 'happy':
             workspace.classList.remove('hidden');
-            displaySessionData(currentSessionData);
             showTemporaryToast('✨ Trạng thái Happy Path: Hiển thị đầy đủ Recap + Bridge Map + Citations');
             break;
 
@@ -363,28 +365,29 @@ function setExperienceState(state) {
             banner.className = 'status-banner warning';
             document.getElementById('bannerIcon').innerText = '⚠️';
             document.getElementById('bannerTitle').innerText = 'Low-Confidence Warning (Chất lượng nguồn thấp)';
-            document.getElementById('bannerMessage').innerText = 'Dữ liệu Transcript buổi trước bị thiếu hoặc mơ hồ (đoạn T04-012). Recap bên dưới chỉ mang tính tham khảo, vui lòng kiểm tra lại Slide gốc!';
+            document.getElementById('bannerMessage').innerText = currentSessionData.warning_message || 'Dữ liệu Transcript buổi trước bị thiếu hoặc mơ hồ (đoạn T04-012). Recap bên dưới chỉ mang tính tham khảo, vui lòng kiểm tra lại Slide gốc!';
             
             const recapContainer = document.getElementById('recapList');
-            recapContainer.insertAdjacentHTML('afterbegin', `
-                <div class="recap-item" style="border-left-color: var(--warning); background: rgba(245, 158, 11, 0.05);">
-                    <p class="recap-content">⚠️ <em>Lưu ý: Mức độ tin cậy của bài tóm tắt này đạt 65%. Một số đoạn transcript bị nhiễu audio.</em></p>
-                    <span class="recap-citation">Cảnh báo độ tin cậy</span>
-                </div>
-            `);
+            if (recapContainer) {
+                recapContainer.insertAdjacentHTML('afterbegin', `
+                    <div class="recap-item" style="border-left-color: var(--warning); background: rgba(245, 158, 11, 0.05);">
+                        <p class="recap-content">⚠️ <em>Lưu ý: Mức độ tin cậy của bài tóm tắt này đạt 62%. Audio transcript chứa các đoạn [không nghe rõ].</em></p>
+                        <span class="recap-citation">Cảnh báo độ tin cậy</span>
+                    </div>
+                `);
+            }
             break;
 
         case 'failure':
             banner.className = 'status-banner error';
             document.getElementById('bannerIcon').innerText = '❌';
             document.getElementById('bannerTitle').innerText = 'AI Edge Case: Không tìm thấy căn cứ liên kết (Fallback Mode)';
-            document.getElementById('bannerMessage').innerText = 'AI không tìm thấy mối liên hệ đủ tin cậy giữa hai buổi này (0% overlap citation). Để tránh đưa ra liên kết sai (False Positive), hệ thống khuyên bạn nên vào thẳng bài học!';
+            document.getElementById('bannerMessage').innerText = currentSessionData.warning_message || 'AI không tìm thấy mối liên hệ đủ tin cậy giữa hai buổi này (0% overlap citation). Để tránh đưa ra liên kết sai (False Positive), hệ thống khuyên bạn nên vào thẳng bài học!';
             workspace.classList.add('hidden');
             break;
 
         case 'correction':
             workspace.classList.remove('hidden');
-            displaySessionData(currentSessionData);
             openFeedbackModal();
             break;
     }

@@ -10,5 +10,12 @@
     "experienceState": "happy",
     "category": "hallucination",
     "comment": "Loi trich dan slide 20 trong phan bridge map."
+  },
+  {
+    "timestamp": "2026-07-30T17:35:50.962Z",
+    "session": "d1-d2",
+    "experienceState": "correction",
+    "category": "hallucination",
+    "comment": "Sai thong tin trich dan o Slide 10, thuc te la Slide 11."
   }
 ]

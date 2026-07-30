@@ -59,10 +59,11 @@ class VLearnRequestHandler(SimpleHTTPRequestHandler):
         parsed_url = urllib.parse.urlparse(self.path)
         query_params = urllib.parse.parse_qs(parsed_url.query)
 
-        # Route: GET /api/session?pair=d1-d2
+        # Route: GET /api/session?pair=d1-d2&mode=happy
         if parsed_url.path == '/api/session':
             session_pair = query_params.get('pair', ['d1-d2'])[0]
-            self._handle_get_session_api(session_pair)
+            experience_mode = query_params.get('mode', ['happy'])[0]
+            self._handle_get_session_api(session_pair, experience_mode)
             return
 
         # Default: serve static files from codebase/src/
@@ -78,14 +79,14 @@ class VLearnRequestHandler(SimpleHTTPRequestHandler):
 
         self.send_error(404, "Endpoint not found")
 
-    def _handle_get_session_api(self, session_pair: str):
-        """Generates or fetches AI Learning Bridge JSON trace data for the requested pair."""
-        print(f"[API GET] /api/session requested for pair: {session_pair}")
+    def _handle_get_session_api(self, session_pair: str, mode: str = 'happy'):
+        """Generates or fetches AI Learning Bridge JSON trace data for the requested pair & mode."""
+        print(f"[API GET] /api/session requested for pair: {session_pair}, mode: {mode}")
 
         result_data = None
         if llm_engine:
             try:
-                result_data = llm_engine.generate_learning_bridge(session_pair)
+                result_data = llm_engine.generate_learning_bridge(session_pair, mode=mode)
             except Exception as e:
                 print(f"[API Error] LLM engine failed: {e}")
 

@@ -1,10 +1,10 @@
 {
   "metadata": {
     "session_key": "d1-d2",
-    "timestamp": "2026-07-31 00:27:59",
+    "timestamp": "2026-07-31 00:35:36",
     "call_mode": "offline_fallback",
     "model_used": "fallback_simulation_engine",
-    "latency_ms": 5,
+    "latency_ms": 6,
     "input_chars": 50540,
     "estimated_input_tokens": 12635,
     "recap_count": 5,
@@ -112,6 +112,7 @@
         "answer_index": 1,
         "explanation": "Chính xác! Agent là LLM được đặt vào vòng lặp làm việc có mục tiêu, kết nối tools/API và tự lập kế hoạch hành động (Slide 24 Day 01)."
       }
-    ]
+    ],
+    "trigger_correction_modal": true
   }
 }
