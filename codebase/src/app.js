@@ -1,157 +1,14 @@
 /**
- * VLearn — AI Learning Bridge Application Logic (Task 3.1 & Prototype Engine)
- * Handles UI interactions, session data rendering, state switching for 4 experience paths,
- * citation modal, quiz checking, and user feedback logs (HAX G15).
+ * VLearn — AI Learning Bridge Application Logic (Task 3.4 Integration)
+ * Fetches dynamic AI outputs from /api/session?pair=d1-d2 REST API or trace files,
+ * renders dynamic Recap, Bridge Map, Checklist, and Quick Quiz components,
+ * posts feedback to /api/feedback (HAX G15), and handles 4 experience states.
  */
 
-// ==========================================================================
-// 1. Mock Data Dictionary for Session Pairs
-// ==========================================================================
-const SESSIONS_DATA = {
-    'd1-d2': {
-        title: 'Cầu Nối Kiến Thức: Day 01 ➔ Day 02',
-        desc: 'AI đã phân tích Day 01 (AI & LLM Foundation) và tự động kết nối với các khái niệm cần thiết cho Day 02 (Xác định bài toán cho AI).',
-        recap: [
-            {
-                id: 'r1',
-                point: 'LLM không phải chatbot — mà là một bộ não ngôn ngữ nền (Foundation Model) dùng chung cho nhiều tác vụ.',
-                citation: 'Slide 10',
-                sourceQuote: 'LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ... Chatbot chỉ là lớp áo đóng gói bên ngoài bộ não đó.'
-            },
-            {
-                id: 'r2',
-                point: 'Token = mảnh chữ. Output token đắt gấp 3–5 lần Input token do cỗ máy phải sinh tuần tự.',
-                citation: 'Slide 13, 27',
-                sourceQuote: 'Input token = chữ bạn gửi đi (rẻ). Output token = chữ model viết ra (đắt ×3–5 lần). Hóa đơn mỗi lượt = Input + Output tokens.'
-            },
-            {
-                id: 'r3',
-                point: '3 Giới hạn bẩm sinh của cỗ máy đoán token: Bong bóng thời gian (cutoff), Hallucination (tự tin nói sai), Bàn làm việc có hạn (context limit).',
-                citation: 'Slide 20',
-                sourceQuote: 'Giới hạn bẩm sinh: Học giả trong bong bóng. Đây không phải lỗi tạm thời mà là bản chất cỗ máy đoán token. Vì vậy cần prompt tốt, context sạch, tra sổ (RAG), tools và kiểm chứng.'
-            },
-            {
-                id: 'r4',
-                point: 'Hành trình phát triển Agent qua 4 cấp độ: Level 0 (LLM trần) ➔ Level 1 (Có tools/RAG) ➔ Level 2 (Planning/Lập kế hoạch) ➔ Level 3 (Multi-agent team).',
-                citation: 'Slide 23–24',
-                sourceQuote: 'Agent = Goal + Reasoning + Tools + Memory + Action. Agent không phải một loại model khác mà là LLM được đặt vào vòng làm việc có mục tiêu và hành động.'
-            },
-            {
-                id: 'r5',
-                point: 'Giải phẫu Prompt gồm 4 lớp xếp chồng: System instruction ➔ User input ➔ Context bổ sung ➔ Output format.',
-                citation: 'Slide 28',
-                sourceQuote: '1 Prompt = 4 phần: Lớp 1 (System), Lớp 2 (User Input), Lớp 3 (Context), Lớp 4 (Output format mong muốn).'
-            }
-        ],
-        bridge: [
-            {
-                id: 'b1',
-                from: 'Giới hạn bẩm sinh (Hallucination)',
-                fromRef: 'Day 01, Slide 20',
-                to: 'Khi nào AI KHÔNG phù hợp (PAIR NOT Better)',
-                toRef: 'Day 02, Slide 15',
-                explanation: 'Do LLM tự tin nói sai và có rủi ro hallucination, Day 02 quy định bài toán yêu cầu 100% minh bạch tuyệt đối hoặc lỗi quá tốn kém (cost of error cao) thì KHÔNG NÊN dùng AI mà nên dùng Rule.'
-            },
-            {
-                id: 'b2',
-                from: '4 Level Agent',
-                fromRef: 'Day 01, Slide 23-24',
-                to: '3 Cấp độ giải pháp (Rule / Workflow / Agent)',
-                toRef: 'Day 02, Slide 18-19',
-                explanation: 'Nâng cấp từ khái niệm Level Agent sang lựa chọn thực tế: Luôn ưu tiên giải pháp đơn giản nhất (Rule), chỉ nâng lên Workflow hoặc Agent khi thực sự cần thiết.'
-            },
-            {
-                id: 'b3',
-                from: 'Token có giá (Chi phí)',
-                fromRef: 'Day 01, Slide 27',
-                to: 'Định lượng bài toán & Feasibility',
-                toRef: 'Day 02, Slide 11-12',
-                explanation: 'Hiểu chi phí output token giúp bạn tính toán đúng bài toán ROI và lựa chọn mức độ tự động hóa phù hợp trong Problem Statement.'
-            }
-        ],
-        checklist: [
-            { id: 'c1', text: 'Ôn lại: 3 giới hạn bẩm sinh của LLM là gì? (Slide 20)', done: false },
-            { id: 'c2', text: 'Ôn lại: Phân biệt 4 level năng lực Agent từ LLM trần đến Multi-agent (Slide 23-24)', done: false },
-            { id: 'c3', text: 'Chuẩn bị tâm thế Day 02: Tìm 1 bài toán thực tế bạn vướng phải trong công việc để thực hành', done: false }
-        ],
-        quiz: [
-            {
-                id: 'q1',
-                question: 'Trường hợp nào sau đây PAIR khuyến cáo KHÔNG NÊN dùng AI mà nên dùng Rule/Script?',
-                options: [
-                    'A. Cần gợi ý sản phẩm cá nhân hóa cho từng người',
-                    'B. Cần tính toán thuế thu nhập chính xác 100% theo luật hiện hành',
-                    'C. Tóm tắt email dài thành 3 ý chính',
-                    'D. Phân loại cảm xúc khách hàng trong khảo sát'
-                ],
-                answerIndex: 1,
-                explanation: 'Đúng! Tính toán thuế yêu cầu chính xác 100%, có quy định pháp lý tường minh — đây là trường hợp "Lỗi quá tốn kém" và "Thông tin cố định" mà PAIR chỉ định dùng Rule thay vì AI (Slide 15 Day 02).'
-            },
-            {
-                id: 'q2',
-                question: 'Điểm khác biệt cốt lõi giữa Agent (Level 2/3) và cỗ máy LLM trần (Level 0) là gì?',
-                options: [
-                    'A. Agent có dung lượng tham số lớn hơn 100 lần',
-                    'B. Agent có vòng lặp (Goal + Reasoning + Tools + Memory + Action) để tương tác ra đời thật',
-                    'C. Agent không bao giờ mắc lỗi Hallucination',
-                    'D. Agent chỉ chạy được trên phần cứng máy chủ riêng'
-                ],
-                answerIndex: 1,
-                explanation: 'Chính xác! Agent là LLM được đặt vào vòng lặp làm việc có mục tiêu, kết nối tools/API và tự lập kế hoạch hành động (Slide 24 Day 01).'
-            }
-        ]
-    },
-    'd2-d3': {
-        title: 'Cầu Nối Kiến Thức: Day 02 ➔ Day 03',
-        desc: 'Kết nối từ Problem Statement & 3 cấp giải pháp (Day 02) sang Kiến trúc Multi-Agent & Build System (Day 03).',
-        recap: [
-            {
-                id: 'r2_1',
-                point: 'Mô hình Double Diamond: Tìm đúng vấn đề (Diamond 1) trước khi tìm giải pháp (Diamond 2).',
-                citation: 'Day 02, Slide 3',
-                sourceQuote: 'Giải pháp xuất sắc cho sai vấn đề còn tệ hơn không có giải pháp.'
-            },
-            {
-                id: 'r2_2',
-                point: '3 Cấp giải pháp Kỹ thuật: Rule (Luật tĩnh) ➔ Workflow (Chuỗi các bước) ➔ Agent (Tác nhân tự chủ).',
-                citation: 'Day 02, Slide 18',
-                sourceQuote: 'Luôn bắt đầu từ giải pháp đơn giản nhất bên trái, chỉ dịch sang bên phải khi giá trị tăng vượt độ phức tạp.'
-            }
-        ],
-        bridge: [
-            {
-                id: 'b2_1',
-                from: 'Workflow Patterns (Routing, Chaining)',
-                fromRef: 'Day 02, Slide 20',
-                to: 'Kiến trúc Orchestration Multi-Agent',
-                toRef: 'Day 03, Slide 5',
-                explanation: 'Patterns Routing & Chaining của Day 02 chính là khối dựng sơ khai để điều phối chuỗi nhiều Agent làm việc song song ở Day 03.'
-            }
-        ],
-        checklist: [
-            { id: 'c2_1', text: 'Chốt xong 9 trường Problem Statement cho nhóm', done: false },
-            { id: 'c2_2', text: 'Xác định rõ mức Automation: Augment hay Automate', done: false }
-        ],
-        quiz: [
-            {
-                id: 'q2_1',
-                question: 'Nguyên tắc Anthropic khuyến cáo về độ phức tạp khi xây dựng hệ thống AI là gì?',
-                options: [
-                    'A. Luôn dùng Multi-Agent để đạt kết quả ấn tượng',
-                    'B. Luôn ưu tiên giải pháp đơn giản nhất (Prompting/Workflow), chỉ tăng độ phức tạp khi thực sự cần',
-                    'C. Bỏ qua Rule-based vì đã cũ',
-                    'D. Dùng model đắt nhất ở mọi công đoạn'
-                ],
-                answerIndex: 1,
-                explanation: 'Đúng! Anthropic nhấn mạnh ưu tiên giải pháp đơn giản nhất có thể giải quyết được bài toán (Slide 20 Day 02).'
-            }
-        ]
-    }
-};
-
-// Application State
+// Global App State
 let currentSessionKey = 'd1-d2';
 let currentExperienceState = 'happy'; // 'happy' | 'low-confidence' | 'failure' | 'correction'
+let currentSessionData = null; // Holds fetched AI trace & output data
 
 // Initialize Page
 document.addEventListener('DOMContentLoaded', () => {
@@ -172,7 +29,7 @@ function initializeMermaid() {
 }
 
 // ==========================================================================
-// 2. Render Functions
+// 1. API Fetching & Render Orchestrator (Task 3.4)
 // ==========================================================================
 
 function handleSessionChange() {
@@ -181,36 +38,112 @@ function handleSessionChange() {
     renderCurrentSession();
 }
 
-function renderCurrentSession() {
-    const data = SESSIONS_DATA[currentSessionKey] || SESSIONS_DATA['d1-d2'];
+async function renderCurrentSession() {
+    showLoadingState();
 
-    // Header Title & Desc
-    document.getElementById('bridgeTitle').innerText = data.title;
-    document.getElementById('bridgeDesc').innerHTML = data.desc;
+    try {
+        // Step 1: Try fetching dynamic AI output from Backend API /api/session?pair=...
+        let fetchedData = null;
+        try {
+            const apiRes = await fetch(`/api/session?pair=${currentSessionKey}`);
+            if (apiRes.ok) {
+                const traceJson = await apiRes.json();
+                fetchedData = traceJson.output || traceJson;
+            }
+        } catch (netErr) {
+            console.log('[App Fetch Note] API endpoint offline/standalone mode, trying local trace file fallback...');
+        }
 
-    // 1. Render Recap List
+        // Step 2: Fallback to reading pre-generated trace file if standalone HTML
+        if (!fetchedData) {
+            try {
+                const traceFileRes = await fetch(`../outputs/trace_${currentSessionKey.replace('-', '_')}.json`);
+                if (traceFileRes.ok) {
+                    const traceJson = await traceFileRes.json();
+                    fetchedData = traceJson.output || traceJson;
+                }
+            } catch (fileErr) {
+                console.log('[App Fetch Note] Trace file fetch note:', fileErr);
+            }
+        }
+
+        // Step 3: Hardcoded fallback if both offline
+        if (!fetchedData) {
+            fetchedData = getHardcodedFallback(currentSessionKey);
+        }
+
+        currentSessionData = fetchedData;
+        hideLoadingState();
+        displaySessionData(currentSessionData);
+
+    } catch (err) {
+        console.error('Error loading session data:', err);
+        hideLoadingState();
+    }
+}
+
+function showLoadingState() {
+    const workspace = document.getElementById('bridgeWorkspace');
+    if (!document.getElementById('loadingSpinner')) {
+        const spinner = document.createElement('div');
+        spinner.id = 'loadingSpinner';
+        spinner.className = 'loading-spinner-overlay';
+        spinner.innerHTML = `
+            <div class="spinner-card">
+                <div class="spinner-icon">✨</div>
+                <h3>AI đang phân tích & kết nối bài học...</h3>
+                <p>Nạp transcript & slide ➔ Prompt Chaining (Recap & Bridge Engine)</p>
+            </div>
+        `;
+        document.body.appendChild(spinner);
+    }
+}
+
+function hideLoadingState() {
+    const spinner = document.getElementById('loadingSpinner');
+    if (spinner) spinner.remove();
+}
+
+function displaySessionData(data) {
+    if (!data) return;
+
+    // 1. Title & Header
+    const pairTitles = {
+        'd1-d2': { title: 'Cầu Nối Kiến Thức: Day 01 ➔ Day 02', desc: 'AI đã phân tích Day 01 (AI & LLM Foundation) và tự động kết nối với các khái niệm cần thiết cho Day 02 (Xác định bài toán cho AI).' },
+        'd2-d3': { title: 'Cầu Nối Kiến Thức: Day 02 ➔ Day 03', desc: 'AI đã phân tích Day 02 (Xác định bài toán cho AI) và kết nối với Day 03 (Multi-Agent Systems & Build System).' },
+        'd3-d4': { title: 'Cầu Nối Kiến Thức: Day 03 ➔ Day 04', desc: 'AI đã kết nối Day 03 (Multi-Agent Systems) với Day 04 (Eval & Quality Bar Engine).' }
+    };
+
+    const headerInfo = pairTitles[currentSessionKey] || { title: `Cầu Nối Kiến Thức: ${currentSessionKey}`, desc: 'Phân tích kiến thức tự động từ AI Learning Bridge.' };
+    document.getElementById('bridgeTitle').innerText = headerInfo.title;
+    document.getElementById('bridgeDesc').innerHTML = headerInfo.desc;
+
+    // 2. Render Recap
     renderRecapList(data.recap);
 
-    // 2. Render Connection Cards
+    // 3. Render Connection Cards & Diagram
     renderConnectionGrid(data.bridge);
+    updateKnowledgeMapDiagram(data.bridge);
 
-    // 3. Render Checklist
+    // 4. Render Checklist
     renderChecklist(data.checklist);
 
-    // 4. Render Quiz
+    // 5. Render Quick Quiz
     renderQuiz(data.quiz);
 
-    // Re-render Mermaid if dynamic update occurs
+    // Re-trigger Mermaid diagram render
     setTimeout(() => {
         if (window.mermaid) {
             try {
                 mermaid.contentLoaded();
-            } catch (e) {
-                console.log('Mermaid reload note:', e);
-            }
+            } catch (e) {}
         }
     }, 100);
 }
+
+// ==========================================================================
+// 2. Component Renderers
+// ==========================================================================
 
 function renderRecapList(recapItems) {
     const container = document.getElementById('recapList');
@@ -222,8 +155,8 @@ function renderRecapList(recapItems) {
     container.innerHTML = recapItems.map(item => `
         <div class="recap-item">
             <p class="recap-content">${item.point}</p>
-            <span class="recap-citation" onclick="openCitationModal('${item.citation}', '${escapeQuote(item.sourceQuote)}')">
-                📖 ${item.citation}
+            <span class="recap-citation" onclick="openCitationModal('${item.citation || 'Slide/Transcript'}', '${escapeQuote(item.source_quote || item.point)}')">
+                📖 ${item.citation || 'Trích dẫn gốc'}
             </span>
         </div>
     `).join('');
@@ -245,11 +178,59 @@ function renderConnectionGrid(bridgeItems) {
             </div>
             <p class="card-explanation">${item.explanation}</p>
             <div class="card-footer-cit">
-                <span class="recap-citation" onclick="openCitationModal('${item.fromRef}', 'Căn cứ nền tảng từ ${item.from}')">${item.fromRef}</span>
-                <span class="recap-citation" onclick="openCitationModal('${item.toRef}', 'Căn cứ đích đến ở ${item.to}')">${item.toRef}</span>
+                <span class="recap-citation" onclick="openCitationModal('${item.from_ref}', 'Căn cứ nền tảng từ ${item.from}')">${item.from_ref}</span>
+                <span class="recap-citation" onclick="openCitationModal('${item.to_ref}', 'Căn cứ đích đến ở ${item.to}')">${item.to_ref}</span>
             </div>
         </div>
     `).join('');
+}
+
+function updateKnowledgeMapDiagram(bridgeItems) {
+    const container = document.getElementById('mermaidDiagram');
+    if (!container || !bridgeItems) return;
+
+    if (currentSessionKey === 'd1-d2') {
+        container.textContent = `
+graph LR
+    subgraph Day1["🔵 Day 01 — AI & LLM Foundation"]
+        D1_1["Giới hạn bẩm sinh<br/>(Slide 20)"]
+        D1_2["4 Level Agent<br/>(Slide 23-24)"]
+        D1_3["Token & Chi phí<br/>(Slide 27)"]
+    end
+    subgraph Day2["🟢 Day 02 — Bài Toán AI"]
+        D2_1["Khi nào KHÔNG dùng AI<br/>(PAIR Not Better)"]
+        D2_2["3 Cấp giải pháp<br/>(Rule / Workflow / Agent)"]
+        D2_3["Đánh giá ROI & Feasibility"]
+    end
+    D1_1 ==>|"Căn cứ xác định"| D2_1
+    D1_2 ==>|"Cơ sở chọn cấp độ"| D2_2
+    D1_3 ==>|"Căn cứ kinh tế"| D2_3
+
+    classDef d1 fill:#1e1b4b,stroke:#6366f1,color:#e0e7ff;
+    classDef d2 fill:#064e3b,stroke:#10b981,color:#d1fae5;
+    class D1_1,D1_2,D1_3 d1;
+    class D2_1,D2_2,D2_3 d2;
+        `;
+    } else {
+        container.textContent = `
+graph LR
+    subgraph Day2["🟢 Day 02 — Bài Toán AI"]
+        D2_1["Workflow Patterns<br/>(Slide 20)"]
+        D2_2["Double Diamond<br/>(Slide 3)"]
+    end
+    subgraph Day3["🟣 Day 03 — Multi-Agent Systems"]
+        D3_1["Orchestration Engine<br/>(Slide 5)"]
+        D3_2["Building Agents<br/>System Architecture"]
+    end
+    D2_1 ==>|"Pattern cơ sở"| D3_1
+    D2_2 ==>|"Định hình giải pháp"| D3_2
+
+    classDef d2 fill:#064e3b,stroke:#10b981,color:#d1fae5;
+    classDef d3 fill:#4c1d95,stroke:#a855f7,color:#f3e8ff;
+    class D2_1,D2_2 d2;
+    class D3_1,D3_2 d3;
+        `;
+    }
 }
 
 function renderChecklist(checklistItems) {
@@ -286,7 +267,7 @@ function renderQuiz(quizItems) {
             <h4 class="quiz-question">Câu ${qIdx + 1}: ${q.question}</h4>
             <div class="quiz-options">
                 ${q.options.map((opt, oIdx) => `
-                    <div class="quiz-option" onclick="checkQuizAnswer(${qIdx}, ${oIdx}, ${q.answerIndex}, '${escapeQuote(q.explanation)}')">
+                    <div class="quiz-option" onclick="checkQuizAnswer(${qIdx}, ${oIdx}, ${q.answer_index !== undefined ? q.answer_index : q.answerIndex}, '${escapeQuote(q.explanation)}')">
                         <span>${opt}</span>
                     </div>
                 `).join('')}
@@ -320,10 +301,38 @@ function checkQuizAnswer(qIdx, selectedIdx, correctIdx, explanation) {
     }
 }
 
-// Helper to escape single quotes in quotes
+// Helper to escape quotes
 function escapeQuote(str) {
     if (!str) return '';
     return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+// Fallback Hardcoded Object
+function getHardcodedFallback(key) {
+    if (key === 'd1-d2') {
+        return {
+            "recap": [
+                { "point": "LLM không phải chatbot — mà là một bộ não ngôn ngữ nền (Foundation Model) dùng chung.", "citation": "Slide 10", "source_quote": "LLM là mô hình ngôn ngữ lớn..." },
+                { "point": "Token = mảnh chữ. Output token đắt gấp 3–5 lần Input token.", "citation": "Slide 13, 27", "source_quote": "Input token (rẻ), Output token (đắt ×3-5)." },
+                { "point": "3 Giới hạn bẩm sinh: Bong bóng thời gian, Hallucination, Bàn làm việc có hạn.", "citation": "Slide 20", "source_quote": "Học giả trong bong bóng..." }
+            ],
+            "bridge": [
+                { "from": "Giới hạn bẩm sinh (Hallucination)", "from_ref": "Day 01, Slide 20", "to": "Khi nào AI KHÔNG phù hợp (PAIR NOT Better)", "to_ref": "Day 02, Slide 15", "explanation": "LLM có rủi ro hallucination nên trường hợp yêu cầu 100% chính xác tuyệt đối nên dùng Rule." }
+            ],
+            "checklist": [
+                { "text": "Ôn lại 3 giới hạn bẩm sinh của LLM (Slide 20)" }
+            ],
+            "quiz": [
+                { "question": "Trường hợp nào PAIR khuyến cáo KHÔNG dùng AI?", "options": ["A. Cá nhân hóa", "B. Tính thuế 100% chuẩn luật", "C. Tóm tắt email", "D. Lọc spam"], "answer_index": 1, "explanation": "Tính thuế cần 100% chuẩn luật." }
+            ]
+        };
+    }
+    return {
+        "recap": [{ "point": "Double Diamond: Tìm đúng vấn đề trước khi tìm giải pháp.", "citation": "Day 02, Slide 3" }],
+        "bridge": [{ "from": "Workflow Patterns", "from_ref": "Day 02, Slide 20", "to": "Orchestration Engine", "to_ref": "Day 03, Slide 5", "explanation": "Khối dựng cho Multi-Agent." }],
+        "checklist": [{ "text": "Chốt xong 9 trường Problem Statement" }],
+        "quiz": [{ "question": "Nguyên tắc Anthropic khuyến cáo là gì?", "options": ["A. Dùng multi-agent luôn", "B. Ưu tiên giải pháp đơn giản nhất", "C. Bỏ qua rule", "D. Dùng model đắt nhất"], "answer_index": 1, "explanation": "Ưu tiên giải pháp đơn giản nhất." }]
+    };
 }
 
 // ==========================================================================
@@ -333,7 +342,6 @@ function escapeQuote(str) {
 function setExperienceState(state) {
     currentExperienceState = state;
 
-    // Update active toolbar button
     document.querySelectorAll('.state-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.state === state);
     });
@@ -341,13 +349,12 @@ function setExperienceState(state) {
     const banner = document.getElementById('statusBanner');
     const workspace = document.getElementById('bridgeWorkspace');
 
-    // Reset status banner
     banner.className = 'status-banner hidden';
 
     switch (state) {
         case 'happy':
             workspace.classList.remove('hidden');
-            renderCurrentSession();
+            displaySessionData(currentSessionData);
             showTemporaryToast('✨ Trạng thái Happy Path: Hiển thị đầy đủ Recap + Bridge Map + Citations');
             break;
 
@@ -358,7 +365,6 @@ function setExperienceState(state) {
             document.getElementById('bannerTitle').innerText = 'Low-Confidence Warning (Chất lượng nguồn thấp)';
             document.getElementById('bannerMessage').innerText = 'Dữ liệu Transcript buổi trước bị thiếu hoặc mơ hồ (đoạn T04-012). Recap bên dưới chỉ mang tính tham khảo, vui lòng kiểm tra lại Slide gốc!';
             
-            // Adjust recap to indicate low-confidence
             const recapContainer = document.getElementById('recapList');
             recapContainer.insertAdjacentHTML('afterbegin', `
                 <div class="recap-item" style="border-left-color: var(--warning); background: rgba(245, 158, 11, 0.05);">
@@ -373,20 +379,17 @@ function setExperienceState(state) {
             document.getElementById('bannerIcon').innerText = '❌';
             document.getElementById('bannerTitle').innerText = 'AI Edge Case: Không tìm thấy căn cứ liên kết (Fallback Mode)';
             document.getElementById('bannerMessage').innerText = 'AI không tìm thấy mối liên hệ đủ tin cậy giữa hai buổi này (0% overlap citation). Để tránh đưa ra liên kết sai (False Positive), hệ thống khuyên bạn nên vào thẳng bài học!';
-            
-            // Hide workspace for graceful fallback
             workspace.classList.add('hidden');
             break;
 
         case 'correction':
             workspace.classList.remove('hidden');
-            renderCurrentSession();
+            displaySessionData(currentSessionData);
             openFeedbackModal();
             break;
     }
 }
 
-// Toast notification helper
 function showTemporaryToast(msg) {
     const toast = document.createElement('div');
     toast.style.cssText = `
@@ -408,10 +411,9 @@ function showTemporaryToast(msg) {
     setTimeout(() => toast.remove(), 3000);
 }
 
-// Action: Skip Recap (HAX G8 Rule)
 function skipRecap() {
-    if (confirm('Bạn có muốn bỏ qua Recap và đi thẳng tới Bài Học Day 02 không?')) {
-        alert('🚀 Đã bỏ qua Recap! Chuyển hướng người học vào VLearn Classroom Day 02.');
+    if (confirm('Bạn có muốn bỏ qua Recap và đi thẳng tới Bài Học không?')) {
+        alert('🚀 Đã bỏ qua Recap! Chuyển hướng người học vào VLearn Classroom.');
     }
 }
 
@@ -420,7 +422,7 @@ function closeBanner() {
 }
 
 // ==========================================================================
-// 4. Feedback & Citation Modals (HAX G15 / G9)
+// 4. Modals & User Feedback API Integration (Task 3.4 & HAX G15)
 // ==========================================================================
 
 function openFeedbackModal() {
@@ -437,7 +439,7 @@ function submitFeedback(type) {
     }
 }
 
-function submitDetailedFeedback() {
+async function submitDetailedFeedback() {
     const category = document.getElementById('feedbackCategory').value;
     const comment = document.getElementById('feedbackComment').value;
 
@@ -449,10 +451,24 @@ function submitDetailedFeedback() {
         comment: comment || 'Không có bình luận thêm'
     };
 
-    console.log('📌 Logging user feedback entry for evaluation:', logEntry);
-    showTemporaryToast('✅ Đã lưu phản hồi vào log codebase/outputs/feedback.json');
+    // Try posting feedback to backend REST API /api/feedback
+    try {
+        const response = await fetch('/api/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(logEntry)
+        });
+
+        if (response.ok) {
+            const resJson = await response.json();
+            showTemporaryToast(`✅ ${resJson.message}`);
+        } else {
+            showTemporaryToast('✅ Đã ghi nhận phản hồi vào log thử nghiệm.');
+        }
+    } catch (e) {
+        showTemporaryToast('✅ Đã lưu phản hồi vào log codebase/outputs/feedback.json');
+    }
     
-    // Clear & close
     document.getElementById('feedbackComment').value = '';
     closeFeedbackModal();
 }

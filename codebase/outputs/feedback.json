@@ -1,0 +1,14 @@
+[
+  {
+    "session": "d1-d2",
+    "category": "citation_error",
+    "comment": "Test feedback"
+  },
+  {
+    "timestamp": "2026-07-30T17:28:51.989Z",
+    "session": "d2-d3",
+    "experienceState": "happy",
+    "category": "hallucination",
+    "comment": "Loi trich dan slide 20 trong phan bridge map."
+  }
+]

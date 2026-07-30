@@ -1,10 +1,10 @@
 {
   "metadata": {
     "session_key": "d2-d3",
-    "timestamp": "2026-07-31 00:22:44",
+    "timestamp": "2026-07-31 00:28:31",
     "call_mode": "offline_fallback",
     "model_used": "fallback_simulation_engine",
-    "latency_ms": 3,
+    "latency_ms": 4,
     "input_chars": 37958,
     "estimated_input_tokens": 9489,
     "recap_count": 2,
