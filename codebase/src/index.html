@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLearn — AI Learning Bridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Mermaid.js for Knowledge Map Diagram -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Top Control Bar (Demo State Switcher for CP2 / Testing 4 Paths) -->
+    <div class="demo-toolbar">
+        <div class="demo-badge">⚙️ DEMO CONTROLLER (BUILD LEAD)</div>
+        <div class="demo-controls">
+            <span class="control-label">Trạng thái trải nghiệm:</span>
+            <button class="state-btn active" data-state="happy" onclick="setExperienceState('happy')">✨ Happy Path</button>
+            <button class="state-btn" data-state="low-confidence" onclick="setExperienceState('low-confidence')">⚠️ Low-Confidence</button>
+            <button class="state-btn" data-state="failure" onclick="setExperienceState('failure')">❌ Failure / Fallback</button>
+            <button class="state-btn" data-state="correction" onclick="setExperienceState('correction')">💬 User Correction</button>
+        </div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div class="app-container">
+        <!-- VLearn Platform Header -->
+        <header class="vlearn-header">
+            <div class="brand">
+                <div class="logo-icon">V</div>
+                <div class="brand-text">
+                    <span class="brand-title">VLearn AI</span>
+                    <span class="brand-sub">Platform Học Tập Thích Ứng</span>
+                </div>
+            </div>
+
+            <!-- Session Selector -->
+            <div class="session-selector-container">
+                <label for="sessionSelect" class="select-label">Cặp buổi học:</label>
+                <div class="select-wrapper">
+                    <select id="sessionSelect" onchange="handleSessionChange()">
+                        <option value="d1-d2" selected>Day 01 ➔ Day 02: AI & LLM Foundation ➔ Xác định bài toán AI</option>
+                        <option value="d2-d3">Day 02 ➔ Day 03: Xác định bài toán ➔ Multi-Agent Systems</option>
+                        <option value="d3-d4">Day 03 ➔ Day 04: Agentic System ➔ Eval & Quality Bar</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Actions Header -->
+            <div class="header-actions">
+                <button class="btn-secondary btn-skip" onclick="skipRecap()">
+                    <span>Bỏ qua Recap & Tiến vào bài học ➔</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Banner Thông Báo Cảnh Báo (Dùng cho Low-Confidence / Failure) -->
+        <div id="statusBanner" class="status-banner hidden">
+            <div class="banner-icon" id="bannerIcon">⚠️</div>
+            <div class="banner-content">
+                <h4 id="bannerTitle">Thông báo hệ thống</h4>
+                <p id="bannerMessage">Nội dung cảnh báo ở đây...</p>
+            </div>
+            <button class="banner-close" onclick="closeBanner()">✕</button>
+        </div>
+
+        <!-- Main Workspace (Learning Bridge Grid) -->
+        <main class="bridge-workspace" id="bridgeWorkspace">
+            <!-- Hero Bridge Intro Card -->
+            <div class="bridge-hero-card">
+                <div class="hero-tag">🌉 AI LEARNING BRIDGE ENGINE</div>
+                <h1 class="hero-title" id="bridgeTitle">Cầu Nối Kiến Thức: Day 01 ➔ Day 02</h1>
+                <p class="hero-desc" id="bridgeDesc">
+                    AI đã phân tích <strong>Day 01 (AI & LLM Foundation)</strong> và tự động kết nối với nền tảng cần thiết cho <strong>Day 02 (Xác định bài toán AI)</strong>. Dành 3 phút ôn tập bên dưới trước khi bắt đầu!
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">3 phút</span>
+                        <span class="stat-label">Thời gian ôn đọc</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value">3 Điểm chạm</span>
+                        <span class="stat-label">Nền tảng then chốt</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value">100% Traceable</span>
+                        <span class="stat-label">Trích dẫn Slide & Transcript</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 1: Recap Buổi N-1 -->
+            <section class="bridge-section recap-section">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <span class="section-num">01</span>
+                        <h2>📌 Tóm Tắt Trọng Tâm Day 01</h2>
+                    </div>
+                    <span class="badge badge-ai">✨ AI Generated • Verified Sources</span>
+                </div>
+                <div class="recap-list" id="recapList">
+                    <!-- Dynamic Items render by JS -->
+                </div>
+            </section>
+
+            <!-- Section 2: Bridge Map & Knowledge Connections -->
+            <section class="bridge-section connection-section">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <span class="section-num">02</span>
+                        <h2>🔗 Mối Liên Hệ Kiến Thức (Bridge Map)</h2>
+                    </div>
+                    <span class="badge badge-highlight">Day 01 → Day 02 Impact</span>
+                </div>
+
+                <p class="section-intro">
+                    Tại sao kiến thức Day 01 lại trực tiếp quyết định khả năng làm bài của bạn ở Day 02?
+                </p>
+
+                <!-- Connection Cards Grid -->
+                <div class="connection-grid" id="connectionGrid">
+                    <!-- Dynamic Cards render by JS -->
+                </div>
+
+                <!-- Knowledge Map Visualizer (Mermaid Mock) -->
+                <div class="knowledge-map-card">
+                    <div class="map-header">
+                        <h3>🗺️ Sơ Đồ Mạch Kiến Thức (Knowledge Graph Visualizer)</h3>
+                        <span class="badge badge-subtle">Visual Knowledge Path</span>
+                    </div>
+                    <div class="mermaid-container">
+                        <pre class="mermaid" id="mermaidDiagram">
+graph LR
+    subgraph Day1["🔵 Day 01 — AI & LLM Foundation"]
+        D1_1["Giới hạn bẩm sinh<br/>(Slide 20)"]
+        D1_2["4 Level Agent<br/>(Slide 23-24)"]
+        D1_3["Token & Chi phí<br/>(Slide 27)"]
+    end
+    subgraph Day2["🟢 Day 02 — Bài Toán AI"]
+        D2_1["Khi nào KHÔNG dùng AI<br/>(PAIR Not Better)"]
+        D2_2["3 Cấp giải pháp<br/>(Rule / Workflow / Agent)"]
+        D2_3["Đánh giá ROI & Feasibility"]
+    end
+    D1_1 ==>|"Căn cứ xác định"| D2_1
+    D1_2 ==>|"Cơ sở chọn cấp độ"| D2_2
+    D1_3 ==>|"Căn cứ kinh tế"| D2_3
+
+    classDef d1 fill:#1e1b4b,stroke:#6366f1,color:#e0e7ff;
+    classDef d2 fill:#064e3b,stroke:#10b981,color:#d1fae5;
+    class D1_1,D1_2,D1_3 d1;
+    class D2_1,D2_2,D2_3 d2;
+                        </pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Checklist Trước Khi Học -->
+            <section class="bridge-section checklist-section">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <span class="section-num">03</span>
+                        <h2>✅ Checklist Chuẩn Bị Cho Day 02</h2>
+                    </div>
+                    <span class="badge badge-action">Pre-Class Activation</span>
+                </div>
+                <p class="section-intro">Tự tích chọn để đảm bảo bạn đã đủ tâm thế bắt đầu buổi học tiếp theo:</p>
+                <div class="checklist-items" id="checklistContainer">
+                    <!-- Dynamic Checklist render by JS -->
+                </div>
+            </section>
+
+            <!-- Section 4: Quick Bridge Quiz -->
+            <section class="bridge-section quiz-section">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <span class="section-num">04</span>
+                        <h2>⚡ Quick Bridge Quiz (Kiểm Tra Nhanh)</h2>
+                    </div>
+                    <span class="badge badge-quiz">3 Câu Trắc Nghiệm</span>
+                </div>
+                <p class="section-intro">Thử thách 1 phút giúp kích hoạt vùng nhớ và kiểm chứng khả năng liên hệ của bạn:</p>
+
+                <div class="quiz-container" id="quizContainer">
+                    <!-- Dynamic Quiz render by JS -->
+                </div>
+            </section>
+
+            <!-- Section 5: User Feedback Component (HAX G15 Rule) -->
+            <section class="feedback-footer-card">
+                <div class="feedback-content">
+                    <div class="feedback-text">
+                        <h4>💬 Đánh giá chất lượng Cầu Nối Kiến Thức</h4>
+                        <p>Cầu nối AI này có giúp bạn kết nối bài học tốt hơn không?</p>
+                    </div>
+                    <div class="feedback-actions">
+                        <button class="feedback-btn thumbs-up" onclick="submitFeedback('up')">
+                            👍 Hữu ích
+                        </button>
+                        <button class="feedback-btn thumbs-down" onclick="openFeedbackModal()">
+                            👎 Chưa chính xác / Cần góp ý
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Feedback Sửa Lỗi (HAX G9 / G15 / G17) -->
+    <div id="feedbackModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>💬 Gửi Phản Hồi Sửa Lỗi Cho AI</h3>
+                <button class="modal-close" onclick="closeFeedbackModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <label class="input-label">AI đã mắc lỗi gì ở trải nghiệm vừa rồi?</label>
+                <select id="feedbackCategory" class="form-select">
+                    <option value="hallucination">AI bịa liên kết không có trong bài (False Positive)</option>
+                    <option value="citation_error">Trích dẫn sai trang Slide / mã Transcript</option>
+                    <option value="missed_point">Bỏ sót kiến thức quan trọng (False Negative)</option>
+                    <option value="domain_error">Hiểu nhầm thuật ngữ kỹ thuật AI</option>
+                    <option value="other">Lý do khác...</option>
+                </select>
+
+                <label class="input-label" style="margin-top: 12px;">Chi tiết hoặc góp ý sửa đổi của bạn:</label>
+                <textarea id="feedbackComment" class="form-textarea" placeholder="Nhập góp ý nguyên văn của bạn để giúp nhóm cải thiện prompt & RAG..."></textarea>
+
+                <div class="modal-notice">
+                    ℹ️ Phản hồi của bạn sẽ được tự động ghi nhận vào log <code>codebase/outputs/feedback.json</code> để kiểm thử red-teaming.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeFeedbackModal()">Hủy</button>
+                <button class="btn-primary" onclick="submitDetailedFeedback()">Gửi Phản Hồi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Citation Preview -->
+    <div id="citationModal" class="modal-overlay hidden">
+        <div class="modal-card citation-card">
+            <div class="modal-header">
+                <h3 id="citationTitle">🔍 Nguồn Trích Dẫn Gốc</h3>
+                <button class="modal-close" onclick="closeCitationModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="citation-meta" id="citationMeta">Tài liệu: Slide Day 01 • Trang 20</div>
+                <div class="citation-quote-box" id="citationQuote">
+                    "Trích dẫn nguyên văn từ tài liệu..."
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="closeCitationModal()">Đã Hiểu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
