@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giải thích thuật ngữ trong bối cảnh bài giảng — Prototype CP2</title>
+<style>
+  :root {
+    --bg-1: #f4f6fb;
+    --bg-2: #eef1f8;
+    --panel: #ffffff;
+    --panel-2: #f4f6fb;
+    --border: #e1e5ee;
+    --text: #1c2333;
+    --muted: #6b7280;
+    --accent: #4f5fe0;
+    --accent-soft: rgba(79,95,224,.08);
+    --ok: #16a34a;
+    --ok-soft: #ecfdf3;
+    --warn: #b45309;
+    --warn-soft: #fef6e8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+  }
+  .slide-pane {
+    flex: 1.4;
+    padding: 32px 40px;
+    position: relative;
+    overflow-y: auto;
+  }
+  .side-pane {
+    flex: 1;
+    max-width: 380px;
+    border-left: 1px solid var(--border);
+    padding: 24px;
+    background: var(--panel);
+    overflow-y: auto;
+    box-shadow: -8px 0 24px rgba(28,35,51,.04);
+  }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid rgba(79,95,224,.18);
+    border-radius: 999px;
+    padding: 4px 12px;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+  h1 { font-size: 22px; margin: 4px 0 2px; color: #10162a; }
+  .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+  .slide-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    line-height: 1.85;
+    font-size: 16px;
+    box-shadow: 0 12px 30px rgba(28,35,51,.06);
+  }
+  .slide-card h2 { margin-top: 0; font-size: 19px; color: #10162a; }
+  .slide-card strong { color: var(--accent); font-weight: 700; }
+
+  #ask-btn {
+    position: absolute;
+    display: none;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(79,95,224,.35);
+    z-index: 20;
+  }
+  #ask-btn:hover { filter: brightness(1.06); }
+
+  .side-pane h3 { font-size: 15px; margin-bottom: 4px; }
+  .empty-state {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 40px;
+    line-height: 1.6;
+  }
+  .term-chip {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid rgba(79,95,224,.18);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .status-line {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+  .dot.warn { background: var(--warn); }
+  .explain-text { font-size: 14.5px; line-height: 1.7; color: #2a3145; }
+  .citation {
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: #445;
+    background: var(--panel-2);
+    border-left: 3px solid var(--accent);
+    padding: 8px 10px;
+    border-radius: 0 8px 8px 0;
+  }
+  .fallback {
+    border-left: 3px solid var(--warn);
+    background: var(--warn-soft);
+    padding: 8px 10px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: #7a4a10;
+    margin-top: 14px;
+  }
+  .feedback-row {
+    margin-top: 20px;
+    display: flex;
+    gap: 8px;
+  }
+  .feedback-row button {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .feedback-row button.active { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+  .loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  ::selection { background: rgba(79,95,224,.18); }
+</style>
+</head>
+<body>
+
+  <div class="slide-pane" id="slide-pane">
+    <div class="badge">Day 1 · AI &amp; LLM Foundation</div>
+    <h1>Bên trong LLM: cơ chế vận hành</h1>
+    <div class="subtitle">Bôi đen một cụm từ chuyên ngành bên dưới để AI giải thích trong bối cảnh buổi học này.</div>
+
+    <div class="slide-card" id="slide-content">
+      <h2>AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?</h2>
+      <p>
+        <strong>AI</strong> là chiếc ô lớn nhất: mọi hệ thống có yếu tố "thông minh".
+        <strong>Machine Learning</strong> là học từ dữ liệu thay vì viết luật tay.
+        <strong>Deep Learning</strong> là mạng nơ-ron nhiều tầng tự học đặc trưng.
+        <strong>Generative AI</strong> sinh nội dung mới: văn bản, ảnh, code.
+        <strong>LLM</strong> là model nền chuyên ngôn ngữ, trái tim của làn sóng hiện nay.
+      </p>
+      <p>
+        Bản chất của <strong>LLM</strong> là dự đoán <strong>token</strong> kế tiếp, không phải "biết" tri thức.
+        Kiến trúc <strong>Transformer</strong> dùng cơ chế <strong>self-attention</strong> để mỗi token nhìn song song
+        các token khác trước khi sinh ra token tiếp theo.
+      </p>
+      <p>
+        Một giới hạn quan trọng của LLM là <strong>context window</strong>: mô hình chỉ nhìn được một lượng
+        thông tin nhất định trong một lượt, nên với hội thoại rất dài, phần đầu có thể bị "quên".
+      </p>
+    </div>
+  </div>
+
+  <button id="ask-btn">✨ Giải thích trong bối cảnh bài giảng</button>
+
+  <div class="side-pane" id="side-pane">
+    <div class="empty-state">
+      Chưa có thuật ngữ nào được chọn.<br><br>
+      Bôi đen một cụm từ trên slide bên trái, rồi bấm nút "Giải thích" xuất hiện cạnh vùng chọn.
+    </div>
+  </div>
+
+<script>
+const TERM_KB = {
+  "llm": {
+    canonical: "LLM (Large Language Model)",
+    explanation: "Trong buổi học này, giảng viên gọi LLM là \"trái tim\" của làn sóng AI hiện đại — bản thân nó không lưu tri thức như một cuốn từ điển, mà liên tục dự đoán từ (token) tiếp theo dựa trên xác suất đã học từ dữ liệu khổng lồ.",
+    citation: "Day 1 — Foundation, đoạn [T06-126]",
+    confidence: "high"
+  },
+  "token": {
+    canonical: "Token",
+    explanation: "Giảng viên giải thích: LLM không xử lý theo \"chữ\" mà theo token — đơn vị nhỏ hơn một từ. Mỗi lượt, mô hình dự đoán xác suất token kế tiếp, sinh ra token đó, nối vào chuỗi, rồi lặp lại. Tiếng Việt thường tốn nhiều token hơn tiếng Anh cho cùng một câu.",
+    citation: "Day 1 — Foundation, đoạn [T04-047], [T06-134]",
+    confidence: "high"
+  },
+  "context window": {
+    canonical: "Context window",
+    explanation: "Đây là giới hạn lượng thông tin mô hình có thể \"nhìn\" cùng lúc trong một lượt. Giảng viên ví von: nhu cầu con người là đọc cả tỷ cuốn sách mà không quên, nhưng context window chính là ranh giới khiến mô hình bắt đầu quên khi hội thoại/tài liệu quá dài.",
+    citation: "Day 1 — Foundation, đoạn [T06-149]",
+    confidence: "high"
+  },
+  "self-attention": {
+    canonical: "Self-attention",
+    explanation: "Là cơ chế cốt lõi bên trong kiến trúc Transformer: mỗi token \"nhìn\" tất cả token khác cùng lúc (song song), thay vì đọc tuần tự từng từ một — đây là điểm giảng viên nhấn mạnh là từ khóa quan trọng nhất của phần này.",
+    citation: "Day 1 — Foundation, đoạn [T06-126]",
+    confidence: "high"
+  },
+  "transformer": {
+    canonical: "Transformer",
+    explanation: "Là kiến trúc nền phía sau các LLM hiện nay — giảng viên mô tả nó vận hành theo vòng lặp: dự đoán token tiếp theo → sinh ra → nối vào chuỗi → lặp lại đến khi hoàn tất.",
+    citation: "Day 1 — Foundation, đoạn [T04-047]",
+    confidence: "high"
+  }
+};
+
+function normalize(str) {
+  return str.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function lookupTerm(rawText) {
+  const key = normalize(rawText);
+  if (TERM_KB[key]) return TERM_KB[key];
+  const found = Object.keys(TERM_KB).find(k => key.includes(k) || k.includes(key));
+  return found ? TERM_KB[found] : null;
+}
+
+const askBtn = document.getElementById("ask-btn");
+const slidePane = document.getElementById("slide-pane");
+const sidePane = document.getElementById("side-pane");
+let pendingSelection = "";
+
+document.addEventListener("mouseup", (e) => {
+  const sel = window.getSelection();
+  const text = sel.toString().trim();
+
+  if (!text || text.length < 2 || !slidePane.contains(sel.anchorNode)) {
+    askBtn.style.display = "none";
+    return;
+  }
+
+  pendingSelection = text;
+  const range = sel.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
+  askBtn.style.left = `${rect.left + window.scrollX}px`;
+  askBtn.style.top = `${rect.bottom + window.scrollY + 8}px`;
+  askBtn.style.display = "block";
+});
+
+askBtn.addEventListener("click", () => {
+  const term = pendingSelection;
+  askBtn.style.display = "none";
+  renderLoading(term);
+  setTimeout(() => renderResult(term), 700);
+});
+
+function renderLoading(term) {
+  sidePane.innerHTML = `
+    <div class="term-chip">${escapeHtml(term)}</div>
+    <div class="loading"><div class="spinner"></div> Đang tra trong transcript buổi học…</div>
+  `;
+}
+
+function renderResult(term) {
+  const hit = lookupTerm(term);
+
+  if (hit) {
+    sidePane.innerHTML = `
+      <div class="term-chip">${escapeHtml(hit.canonical)}</div>
+      <div class="status-line"><span class="dot"></span> Có căn cứ trong bài giảng</div>
+      <div class="explain-text">${escapeHtml(hit.explanation)}</div>
+      <div class="citation">📄 Trích từ: ${escapeHtml(hit.citation)}</div>
+      ${feedbackRow()}
+    `;
+  } else {
+    sidePane.innerHTML = `
+      <div class="term-chip">${escapeHtml(term)}</div>
+      <div class="status-line"><span class="dot warn"></span> Không đủ căn cứ</div>
+      <div class="explain-text">Mình chưa tìm thấy thuật ngữ này được nhắc tới trong buổi học đang xem, nên mình không đoán nghĩa để tránh giải thích sai.</div>
+      <div class="fallback">Gợi ý: hỏi lại TA trên Discord, hoặc kiểm tra xem thuật ngữ này có ở một buổi học khác không.</div>
+      ${feedbackRow()}
+    `;
+  }
+}
+
+function feedbackRow() {
+  return `
+    <div class="feedback-row">
+      <button onclick="markFeedback(this,'up')">👍 Hữu ích</button>
+      <button onclick="markFeedback(this,'down')">👎 Chưa đúng</button>
+    </div>
+  `;
+}
+
+function markFeedback(btn, kind) {
+  const row = btn.parentElement;
+  [...row.children].forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  console.log("feedback:", kind);
+}
+
+function escapeHtml(s) {
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>
