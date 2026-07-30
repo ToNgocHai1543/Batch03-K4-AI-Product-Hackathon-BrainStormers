@@ -601,16 +601,26 @@ body {
     padding: 20px;
 }
 
-.map-header {
+.map-controls {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
+    gap: 8px;
 }
 
-.map-header h3 {
-    font-size: 0.98rem;
-    font-weight: 700;
+.btn-subtle {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.btn-subtle:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
 }
 
 .mermaid-container {

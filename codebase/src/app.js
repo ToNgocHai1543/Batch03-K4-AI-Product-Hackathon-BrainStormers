@@ -187,7 +187,7 @@ function renderConnectionGrid(bridgeItems) {
 
 function updateKnowledgeMapDiagram(bridgeItems) {
     const container = document.getElementById('mermaidDiagram');
-    if (!container || !bridgeItems) return;
+    if (!container) return;
 
     if (currentSessionKey === 'd1-d2') {
         container.textContent = `
@@ -230,6 +230,38 @@ graph LR
     class D2_1,D2_2 d2;
     class D3_1,D3_2 d3;
         `;
+    }
+}
+
+function toggleKnowledgeMapView(viewType) {
+    const container = document.getElementById('mermaidDiagram');
+    if (!container) return;
+
+    if (viewType === 'tree') {
+        container.textContent = `
+graph TD
+    Root["🌉 AI Learning Bridge Path"]
+    Root ==> D1["Day 01 - Foundation"]
+    Root ==> D2["Day 02 - Problem Statement"]
+    D1 --> D1_1["Giới hạn LLM (Slide 20)"]
+    D1 --> D1_2["4 Level Agent (Slide 23)"]
+    D2 --> D2_1["PAIR Not Better (Slide 15)"]
+    D2 --> D2_2["Rule/Workflow/Agent (Slide 18)"]
+    D1_1 .-> D2_1
+    D1_2 .-> D2_2
+    classDef root fill:#1e1b4b,stroke:#6366f1,color:#fff;
+    class Root root;
+        `;
+        showTemporaryToast('🌲 Chuyển đổi sang Cấu trúc Tree View');
+    } else {
+        updateKnowledgeMapDiagram(currentSessionData ? currentSessionData.bridge : null);
+        showTemporaryToast('📊 Chuyển đổi sang Cấu trúc Graph View');
+    }
+
+    if (window.mermaid) {
+        try {
+            mermaid.contentLoaded();
+        } catch (e) {}
     }
 }
 

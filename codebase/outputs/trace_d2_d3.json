@@ -1,10 +1,10 @@
 {
   "metadata": {
     "session_key": "d2-d3",
-    "timestamp": "2026-07-31 00:28:31",
+    "timestamp": "2026-07-31 00:37:36",
     "call_mode": "offline_fallback",
     "model_used": "fallback_simulation_engine",
-    "latency_ms": 4,
+    "latency_ms": 5,
     "input_chars": 37958,
     "estimated_input_tokens": 9489,
     "recap_count": 2,
@@ -14,7 +14,7 @@
   "output": {
     "session_key": "d2-d3",
     "has_citations": true,
-    "confidence_score": 0.92,
+    "confidence_score": 0.62,
     "recap": [
       {
         "id": "r2_1",
@@ -62,6 +62,8 @@
         "answer_index": 1,
         "explanation": "Đúng! Anthropic nhấn mạnh ưu tiên giải pháp đơn giản nhất có thể giải quyết được bài toán (Slide 20 Day 02)."
       }
-    ]
+    ],
+    "warning_type": "low-confidence",
+    "warning_message": "Dữ liệu Transcript bị thiếu hoặc audio bị nhiễu (đoạn T04-012). Recap mang tính tham khảo, vui lòng kiểm tra lại Slide gốc!"
   }
 }

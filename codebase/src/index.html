@@ -126,11 +126,18 @@
                     <!-- Dynamic Cards render by JS -->
                 </div>
 
-                <!-- Knowledge Map Visualizer (Mermaid Mock) -->
+                <!-- Knowledge Map Visualizer (Mermaid Interactive Component - Task 3.6) -->
                 <div class="knowledge-map-card">
                     <div class="map-header">
-                        <h3>🗺️ Sơ Đồ Mạch Kiến Thức (Knowledge Graph Visualizer)</h3>
-                        <span class="badge badge-subtle">Visual Knowledge Path</span>
+                        <div>
+                            <h3>🗺️ Sơ Đồ Mạch Kiến Thức (Knowledge Graph Visualizer)</h3>
+                            <p style="font-size:0.78rem; color:var(--text-dim); margin-top:2px;">Tự động trực quan hóa đường đi kiến thức giữa hai buổi học</p>
+                        </div>
+                        <div class="map-controls">
+                            <button class="btn-subtle" onclick="toggleKnowledgeMapView('graph')">📊 Graph View</button>
+                            <button class="btn-subtle" onclick="toggleKnowledgeMapView('tree')">🌲 Tree View</button>
+                            <span class="badge badge-subtle">✨ MOCK VISUALIZER</span>
+                        </div>
                     </div>
                     <div class="mermaid-container">
                         <pre class="mermaid" id="mermaidDiagram">
