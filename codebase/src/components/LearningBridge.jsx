@@ -3,7 +3,6 @@ import {
   CheckSquare, Sparkles, HelpCircle, ThumbsDown, FileText, ArrowRight,
   ExternalLink, Bot
 } from 'lucide-react';
-import KnowledgeMap from './KnowledgeMap';
 import FeedbackModal from './FeedbackModal';
 import { llmService } from '../services/llmService';
 
@@ -171,8 +170,8 @@ export default function LearningBridge({
         )}
       </div>
 
-      {/* 🟢 4 TAB PILL NAVIGATION */}
-      <div className="bg-slate-100 p-1 rounded-lg grid grid-cols-4 gap-1 text-[14px] shrink-0">
+      {/* 🟢 3 TAB PILL NAVIGATION */}
+      <div className="bg-slate-100 p-1 rounded-lg grid grid-cols-3 gap-1 text-[14px] shrink-0">
         <button 
           onClick={() => setActiveTab('recap')}
           className={`py-1.5 rounded-md font-bold text-[13px] text-center whitespace-nowrap transition-all ${
@@ -189,15 +188,6 @@ export default function LearningBridge({
           }`}
         >
           Bridge
-        </button>
-
-        <button 
-          onClick={() => setActiveTab('map')}
-          className={`py-1.5 rounded-md font-bold text-[13px] text-center whitespace-nowrap transition-all ${
-            activeTab === 'map' ? 'bg-[#0f2b5c] text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-          }`}
-        >
-          Sơ đồ
         </button>
 
         <button 
@@ -330,14 +320,7 @@ export default function LearningBridge({
         </div>
       )}
 
-      {/* 🗺️ TAB 3: KNOWLEDGE MAP */}
-      {activeTab === 'map' && (
-        <KnowledgeMap 
-          bridgeLinks={bridgeData.bridgeLinks} 
-          fromDayCode={fromDay.code} 
-          toDayCode={toDay.code} 
-        />
-      )}
+
 
       {/* ✅ TAB 4: AI QUIZ + CHECKLIST */}
       {activeTab === 'checklist' && (
