@@ -1,6 +1,18 @@
 // Module quản lý trace log gọi LLM & sự kiện người dùng (đảm bảo Rubric R5: 3đ)
 const LOG_KEY = 'vlearn_ai_bridge_traces';
 
+const sendLogToServer = (level, ...args) => {
+  if (import.meta.env.DEV) { // Only in dev mode with the vite server
+    try {
+      fetch('/api/logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ level, data: args })
+      }).catch(() => { /* ignore fetch errors to avoid infinite loops */ });
+    } catch(e) {}
+  }
+};
+
 export const logger = {
   // Ghi lại một đợt gọi AI thực tế
   logLLMCall: (requestData, responseData, executionTimeMs) => {
@@ -50,6 +62,7 @@ export const logger = {
     } catch (e) {
       console.warn('Không thể lưu feedback log:', e);
     }
+    console.log('[USER FEEDBACK LOGGED]', feedbackItem);
     return feedbackItem;
   },
 
@@ -66,5 +79,27 @@ export const logger = {
   // Xóa sạch logs
   clearLogs: () => {
     localStorage.removeItem(LOG_KEY);
+  },
+
+  // Thiết lập global logging để chặn tất cả console output và gửi lên server
+  setupGlobalLogging: () => {
+    const originalLog = console.log;
+    const originalWarn = console.warn;
+    const originalError = console.error;
+
+    console.log = (...args) => {
+      sendLogToServer('info', ...args);
+      originalLog.apply(console, args);
+    };
+
+    console.warn = (...args) => {
+      sendLogToServer('warn', ...args);
+      originalWarn.apply(console, args);
+    };
+
+    console.error = (...args) => {
+      sendLogToServer('error', ...args);
+      originalError.apply(console, args);
+    };
   }
 };

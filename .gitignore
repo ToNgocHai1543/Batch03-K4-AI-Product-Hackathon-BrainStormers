@@ -13,7 +13,7 @@ __pycache__/
 !.env.example
 
 # Data pack (bảo mật — KHÔNG commit lên repo nộp)
-data/
+/data/
 
 # Scratch files
 scratch_*.txt
