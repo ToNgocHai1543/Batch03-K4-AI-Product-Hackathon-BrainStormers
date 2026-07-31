@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
-  BookOpen, Link2, CheckSquare, Sparkles, AlertTriangle, 
-  HelpCircle, ThumbsDown, FileText, ArrowRight, XCircle, 
-  Terminal, ShieldAlert, ExternalLink, Zap
+  CheckSquare, Sparkles, HelpCircle, ThumbsDown, FileText, ArrowRight,
+  ExternalLink, Bot
 } from 'lucide-react';
 import KnowledgeMap from './KnowledgeMap';
 import FeedbackModal from './FeedbackModal';
-import { logger } from '../services/logger';
+import { llmService } from '../services/llmService';
 
 export default function LearningBridge({ 
   bridgeData, 
@@ -17,20 +16,64 @@ export default function LearningBridge({
   onSkipBridge,
   onJumpToSlide
 }) {
-  const [activeTab, setActiveTab] = useState('recap'); // 'recap' | 'bridge' | 'map' | 'checklist' | 'trace'
+  const [activeTab, setActiveTab] = useState('recap'); // 'recap' | 'bridge' | 'map' | 'checklist'
   const [quizAnswers, setQuizAnswers] = useState({});
   const [checklistState, setChecklistState] = useState({});
   const [feedbackTarget, setFeedbackTarget] = useState(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
+  const [quizItems, setQuizItems] = useState([]);
+  const [quizLoading, setQuizLoading] = useState(false);
+
+  useEffect(() => {
+    if (bridgeData?.quiz) {
+      setQuizItems(bridgeData.quiz);
+      setQuizAnswers({});
+    }
+  }, [bridgeData]);
+
+  const quizScore = useMemo(() => {
+    if (!quizItems.length) return { answered: 0, correct: 0 };
+    let answered = 0;
+    let correct = 0;
+    quizItems.forEach((q) => {
+      if (quizAnswers[q.id] !== undefined) {
+        answered += 1;
+        if (quizAnswers[q.id] === q.correctAnswer) correct += 1;
+      }
+    });
+    return { answered, correct };
+  }, [quizItems, quizAnswers]);
 
   if (!bridgeData) return null;
 
   const handleRefreshAI = async () => {
     if (onRefreshLLM) {
       await onRefreshLLM();
-      setToastMessage('✨ Đã tái tạo thành công Cầu nối AI!');
+      setToastMessage('✨ Đã tạo lại cầu nối AI thành công!');
       setTimeout(() => setToastMessage(null), 3500);
+    }
+  };
+
+  const handleGenerateQuizAI = async () => {
+    setQuizLoading(true);
+    try {
+      const result = await llmService.generateBridgeQuiz({ fromDay, toDay });
+      const nextQuiz = (result.quiz || []).map((q, idx) => ({
+        ...q,
+        id: q.id || `ai-q-${idx + 1}`
+      }));
+      setQuizItems(nextQuiz);
+      setQuizAnswers({});
+      setToastMessage(`✨ Đã tạo lại ${nextQuiz.length} câu quiz AI!`);
+      setTimeout(() => setToastMessage(null), 3500);
+      setActiveTab('checklist');
+    } catch (err) {
+      console.error('Quiz AI error:', err);
+      setToastMessage('Không tạo được quiz. Thử lại sau.');
+      setTimeout(() => setToastMessage(null), 3000);
+    } finally {
+      setQuizLoading(false);
     }
   };
 
@@ -47,7 +90,6 @@ export default function LearningBridge({
     setIsFeedbackOpen(true);
   };
 
-  // Helper function to extract slide page number and day code from citation string
   const extractSlidePageAndDay = (citationText) => {
     if (!citationText) return { pageNum: null, dayCode: null };
     const pageMatch = citationText.match(/slide\s*(\d+)/i);
@@ -58,7 +100,6 @@ export default function LearningBridge({
     };
   };
 
-  // Rút gọn tên Path Mode ngắn gọn không rườm rà
   const getShortPathName = (name) => {
     if (!name) return 'Happy Path';
     if (name.includes('Out of Scope') || name.includes('Boundary')) return 'Out-of-Scope';
@@ -66,8 +107,6 @@ export default function LearningBridge({
     if (name.includes('Failure')) return 'Failure';
     return 'Happy Path';
   };
-
-  const logs = logger.getLogs();
 
   return (
     <div className="flex flex-col space-y-3 text-[14px] w-full animate-fade-in">
@@ -85,12 +124,6 @@ export default function LearningBridge({
               {getShortPathName(bridgeData.pathName)}
             </span>
           </div>
-
-          {bridgeData.isRealAPI && (
-            <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 shrink-0 whitespace-nowrap">
-              🟢 Live API
-            </span>
-          )}
         </div>
 
         {/* HERO BRIDGE BANNER */}
@@ -122,7 +155,7 @@ export default function LearningBridge({
             onClick={handleRefreshAI} 
             disabled={loading}
             className="px-2.5 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/80 text-indigo-800 text-[14px] font-semibold hover:bg-indigo-100 transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 whitespace-nowrap cursor-pointer"
-            title="Tái tạo lại cây tri thức bằng AI"
+            title="Tạo lại cây tri thức bằng AI"
           >
             <Sparkles size={13} className={loading ? 'animate-spin text-indigo-600 shrink-0' : 'text-indigo-600 shrink-0'} />
             <span>{loading ? 'Đang tạo...' : 'Tạo lại AI'}</span>
@@ -133,13 +166,13 @@ export default function LearningBridge({
         {toastMessage && (
           <div className="bg-emerald-50 border border-emerald-300 text-emerald-800 text-[12px] font-bold px-3 py-1.5 rounded-lg flex items-center justify-between animate-fade-in shadow-2xs">
             <span>{toastMessage}</span>
-            <span className="text-[10px] text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded font-mono">LIVE API</span>
+            <span className="text-[10px] text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded font-mono">AI</span>
           </div>
         )}
       </div>
 
-      {/* 🟢 5 TAB PILL NAVIGATION */}
-      <div className="bg-slate-100 p-1 rounded-lg grid grid-cols-5 gap-1 text-[14px] shrink-0">
+      {/* 🟢 4 TAB PILL NAVIGATION */}
+      <div className="bg-slate-100 p-1 rounded-lg grid grid-cols-4 gap-1 text-[14px] shrink-0">
         <button 
           onClick={() => setActiveTab('recap')}
           className={`py-1.5 rounded-md font-bold text-[13px] text-center whitespace-nowrap transition-all ${
@@ -174,15 +207,6 @@ export default function LearningBridge({
           }`}
         >
           Quiz
-        </button>
-
-        <button 
-          onClick={() => setActiveTab('trace')}
-          className={`py-1.5 rounded-lg font-bold text-[13px] text-center whitespace-nowrap transition-all ${
-            activeTab === 'trace' ? 'bg-slate-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-          }`}
-        >
-          Trace
         </button>
       </div>
 
@@ -315,48 +339,57 @@ export default function LearningBridge({
         />
       )}
 
-      {/* ✅ TAB 4: CHECKLIST & QUIZ */}
+      {/* ✅ TAB 4: AI QUIZ + CHECKLIST */}
       {activeTab === 'checklist' && (
-        <div className="space-y-3 animate-fade-in max-h-[420px] overflow-y-auto pr-1">
-          <div>
-            <h3 className="text-[14px] font-bold text-slate-900 mb-1.5 flex items-center gap-1 px-0.5">
-              <CheckSquare size={14} className="text-indigo-700 shrink-0" /> Checklist Chuẩn bị
-            </h3>
-            <div className="space-y-1.5">
-              {bridgeData.checklist && bridgeData.checklist.map((ck) => (
-                <label 
-                  key={ck.id}
-                  className="flex items-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors shadow-2xs"
-                >
-                  <input 
-                    type="checkbox" 
-                    checked={!!checklistState[ck.id]}
-                    onChange={() => toggleChecklist(ck.id)}
-                    className="w-4 h-4 rounded text-indigo-600 shrink-0" 
-                  />
-                  <span className={`text-[14px] leading-relaxed ${checklistState[ck.id] ? 'line-through text-slate-400' : 'text-slate-800'}`}>
-                    {ck.text}
-                  </span>
-                </label>
-              ))}
+        <div className="space-y-3 animate-fade-in max-h-[480px] overflow-y-auto pr-1">
+          <div className="flex items-center justify-between gap-2 px-0.5">
+            <div>
+              <h3 className="text-[14px] font-bold text-slate-900 flex items-center gap-1">
+                <HelpCircle size={14} className="text-emerald-700 shrink-0" /> Quiz AI Bridge
+              </h3>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Quiz chuyển tiếp kiến thức Day01 → Day02
+                {quizScore.answered > 0 ? ` · Đúng ${quizScore.correct}/${quizScore.answered}` : ''}
+              </p>
             </div>
+            <button
+              onClick={handleGenerateQuizAI}
+              disabled={quizLoading || loading}
+              className="px-2.5 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-800 text-[12px] font-bold hover:bg-indigo-100 transition-all flex items-center gap-1 disabled:opacity-50 cursor-pointer whitespace-nowrap"
+              title="Tạo lại bộ câu hỏi quiz bằng AI"
+            >
+              <Sparkles size={12} className={quizLoading ? 'animate-spin' : ''} />
+              {quizLoading ? 'Đang tạo...' : 'Tạo lại AI'}
+            </button>
           </div>
 
-          {bridgeData.quiz && bridgeData.quiz.length > 0 && (
-            <div>
-              <h3 className="text-[14px] font-bold text-slate-900 mb-1.5 flex items-center gap-1 px-0.5">
-                <HelpCircle size={14} className="text-emerald-700 shrink-0" /> Quiz Nhanh
-              </h3>
-              <div className="space-y-2">
-                {bridgeData.quiz.map((q) => (
+          {quizItems.length > 0 ? (
+            <div className="space-y-2">
+              {quizItems.map((q, qIdx) => {
+                const showResult = quizAnswers[q.id] !== undefined;
+                const isCorrectAnswer = showResult && quizAnswers[q.id] === q.correctAnswer;
+                const { pageNum, dayCode } = extractSlidePageAndDay(q.citation || '');
+
+                return (
                   <div key={q.id} className="p-3 rounded-xl bg-white border border-slate-200 space-y-2 shadow-2xs">
-                    <p className="text-[14px] font-bold text-slate-900 leading-relaxed">{q.question}</p>
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-[14px] font-bold text-slate-900 leading-relaxed">
+                        <span className="text-emerald-700 mr-1">Câu {qIdx + 1}.</span>
+                        {q.question}
+                      </p>
+                      {showResult && (
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
+                          isCorrectAnswer ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
+                        }`}>
+                          {isCorrectAnswer ? 'Đúng' : 'Sai'}
+                        </span>
+                      )}
+                    </div>
+
                     <div className="grid gap-1.5">
-                      {q.options.map((opt, oIdx) => {
+                      {(q.options || []).map((opt, oIdx) => {
                         const isSelected = quizAnswers[q.id] === oIdx;
                         const isCorrect = oIdx === q.correctAnswer;
-                        const showResult = quizAnswers[q.id] !== undefined;
-
                         let btnStyle = { backgroundColor: '#ffffff', border: '1px solid #cbd5e1', color: '#0f172a' };
                         if (showResult) {
                           if (isCorrect) btnStyle = { backgroundColor: '#ecfdf5', border: '1px solid #10b981', color: '#065f46' };
@@ -367,7 +400,8 @@ export default function LearningBridge({
                           <button
                             key={oIdx}
                             onClick={() => handleQuizSelect(q.id, oIdx)}
-                            className="text-left text-[14px] p-2 rounded-lg transition-all font-medium leading-relaxed"
+                            disabled={showResult}
+                            className="text-left text-[13px] p-2 rounded-lg transition-all font-medium leading-relaxed disabled:cursor-default"
                             style={btnStyle}
                           >
                             {opt}
@@ -375,66 +409,62 @@ export default function LearningBridge({
                         );
                       })}
                     </div>
-                    {quizAnswers[q.id] !== undefined && (
-                      <p className="text-[14px] text-indigo-700 pt-0.5 font-medium leading-relaxed">
-                        💡 {q.explanation}
-                      </p>
+
+                    {showResult && (
+                      <div className="rounded-lg bg-indigo-50 border border-indigo-100 p-2 space-y-1">
+                        <p className="text-[12px] text-indigo-800 font-medium leading-relaxed flex items-start gap-1">
+                          <Bot size={13} className="mt-0.5 shrink-0 text-indigo-600" />
+                          <span><strong>Giải thích:</strong> {q.explanation}</span>
+                        </p>
+                        {q.citation && (
+                          pageNum && onJumpToSlide ? (
+                            <button
+                              onClick={() => onJumpToSlide(pageNum, dayCode)}
+                              className="text-[11px] font-bold text-indigo-700 hover:underline flex items-center gap-1"
+                            >
+                              📍 {q.citation} <ExternalLink size={10} />
+                            </button>
+                          ) : (
+                            <span className="text-[11px] font-semibold text-indigo-600">📍 {q.citation}</span>
+                          )
+                        )}
+                      </div>
                     )}
                   </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="p-4 text-center text-slate-400 text-[13px] italic border border-dashed border-slate-200 rounded-xl">
+              Chưa có quiz. Bấm <strong>Tạo lại AI</strong> để sinh câu hỏi.
+            </div>
+          )}
+
+          {bridgeData.checklist?.length > 0 && (
+            <div className="pt-1">
+              <h3 className="text-[13px] font-bold text-slate-900 mb-1.5 flex items-center gap-1 px-0.5">
+                <CheckSquare size={13} className="text-indigo-700 shrink-0" /> Checklist Chuẩn bị
+              </h3>
+              <div className="space-y-1.5">
+                {bridgeData.checklist.map((ck) => (
+                  <label
+                    key={ck.id}
+                    className="flex items-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors shadow-2xs"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={!!checklistState[ck.id]}
+                      onChange={() => toggleChecklist(ck.id)}
+                      className="w-4 h-4 rounded text-indigo-600 shrink-0"
+                    />
+                    <span className={`text-[13px] leading-relaxed ${checklistState[ck.id] ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+                      {ck.text}
+                    </span>
+                  </label>
                 ))}
               </div>
             </div>
           )}
-        </div>
-      )}
-
-      {/* 🔍 TAB 5: AI TRACE LOGS */}
-      {activeTab === 'trace' && (
-        <div className="space-y-2 animate-fade-in">
-          <div className="flex items-center justify-between text-[12px] text-slate-500 px-0.5">
-            <span>Trace log vết gọi AI:</span>
-            <button 
-              onClick={() => { logger.clearLogs(); window.location.reload(); }}
-              className="text-rose-600 font-semibold hover:underline text-[12px]"
-              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-            >
-              Xóa log
-            </button>
-          </div>
-
-          <div className="space-y-1.5 max-h-[380px] overflow-y-auto pr-1">
-            {logs.length > 0 ? (
-              logs.map((logItem) => (
-                <div 
-                  key={logItem.id}
-                  className="p-2.5 rounded-xl bg-slate-900 font-mono text-[11px] text-slate-200 space-y-1 overflow-hidden shadow-2xs"
-                >
-                  <div className="flex items-center justify-between text-slate-400 border-b border-slate-800 pb-0.5">
-                    <span className="text-indigo-400 font-bold">[{logItem.type}]</span>
-                    <span>{new Date(logItem.timestamp).toLocaleTimeString()} ({logItem.executionTimeMs}ms)</span>
-                  </div>
-
-                  {logItem.type === 'LLM_CALL' && (
-                    <>
-                      <div className="text-slate-300 truncate">PROMPT: {logItem.prompt}</div>
-                      <div className="flex items-center justify-between text-slate-400 pt-0.5">
-                        <span>API Thật: <strong className={logItem.isRealAPI ? 'text-emerald-400' : 'text-amber-400'}>{logItem.isRealAPI ? 'YES' : 'NO'}</strong></span>
-                        <span>Mode: <span className="text-cyan-400">{logItem.pathMode}</span></span>
-                      </div>
-                    </>
-                  )}
-
-                  {logItem.type === 'USER_FEEDBACK' && (
-                    <div>
-                      <span className="text-rose-400 font-bold">FEEDBACK:</span> {logItem.comment}
-                    </div>
-                  )}
-                </div>
-              ))
-            ) : (
-              <div className="p-4 text-center text-slate-400 text-[14px] italic">Chưa có log. Bấm "Tạo lại AI" để sinh trace!</div>
-            )}
-          </div>
         </div>
       )}
 

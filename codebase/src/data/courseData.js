@@ -5,24 +5,24 @@ export const DAY01_SLIDES = [
   { page: 3, title: 'Hệ sinh thái AI: AI, ML, DL, GenAI, LLM', content: '• AI — chiếc ô lớn nhất: mọi hệ thống thông minh.\n• Machine Learning — học từ dữ liệu.\n• Deep Learning — mạng nơ-ron nhiều tầng.\n• Generative AI — sinh nội dung mới (văn bản, ảnh, code).\n• LLM — model nền chuyên ngôn ngữ, tim của làn sóng hiện nay.', subtitle: 'LLM không phải toàn bộ AI — nhưng là tầng nền chính' },
   { page: 4, title: 'Phân loại: Discriminative vs Generative vs Agentic', content: '• Discriminative AI: Phân loại, dự đoán (Input -> Nhãn/Con số)\n• Generative AI: Sinh ra thứ mới (Prompt -> Văn bản/Ảnh/Code)\n• Agentic AI: Nhận mục tiêu rồi tự lập kế hoạch, dùng tool, thực thi nhiều bước.', subtitle: 'Tất cả nằm trong hệ thống học tập AI' },
   { page: 5, title: 'Lịch sử 70 năm trí tuệ nhân tạo', content: '1950: Alan Turing Test -> 1997: Deep Blue thắng Cờ vua -> 2012: AlexNet Deep Learning -> 2017: Transformer (Attention Is All You Need) -> 2022: ChatGPT & Bùng nổ LLM.', subtitle: 'Kỷ nguyên LLM hiện đại bùng nổ từ Transformer' },
-  { page: 6, title: 'Bên trong LLM: Kiến trúc Transformer', content: '• Transformer giải quyết bài toán xử lý chuỗi song song nhờ cơ chế Self-Attention.\n• Self-Attention giúp mô hình hiểu mối liên hệ giữa các từ dù ở xa nhau trong đoạn văn.', subtitle: 'Cơ chế cốt lõi của GPT, Claude, Gemini' },
-  { page: 7, title: 'Cơ chế Next Token Prediction', content: 'LLM vận hành bằng cách liên tục dự đoán từ/token tiếp theo dựa trên xác suất thống kê từ dữ liệu huấn luyện khổng lồ.\nFormula: P(token_n | token_1, ..., token_n-1)', subtitle: 'Bản chất của việc tạo ra văn bản tự nhiên' },
-  { page: 8, title: 'Token & Đơn vị đo lường', content: '• Token không hẳn là 1 từ. 1 Token ≈ 0.75 từ tiếng Anh hoặc ~1 ký tự tiếng Việt.\n• Token quyết định độ dài Context Window và chi phí gọi API.', subtitle: '1.000 token ≈ 750 từ' },
-  { page: 9, title: 'Tokenomics: Tại sao Output đắt hơn Input 3-5 lần?', content: '• Input Token được tính song song 1 lần (Parallel processing).\n• Output Token phải sinh tuần tự từng từ một (Autoregressive step-by-step), tiêu tốn năng lượng tính toán gấp nhiều lần.', subtitle: 'Slide 13, 27 · Tối ưu chi phí sản phẩm AI' },
-  { page: 10, title: 'LLM không phải là Chatbot!', content: '• Chatbot chỉ là 1 giao diện người dùng (UI).\n• LLM là Bộ não xử lý ngôn ngữ tự nhiên nền tảng (Reasoning Engine).\n• Bạn có thể dùng LLM để trích xuất dữ liệu, dịch thuật, lập trình, lập kế hoạch.', subtitle: 'Slide 10 · Nhận thức nền tảng' },
-  { page: 11, title: '4 Level Agent: Từ LLM trần đến Multi-Agent', content: '• Level 1: Naked LLM (Chỉ chat đơn thuần)\n• Level 2: Tool-using Agent (Gắn Google Search, Python REPL, SQL)\n• Level 3: Workflow Agent (Prompt Chaining & Routing)\n• Level 4: Multi-Agent System (Hệ thống nhiều agent phối hợp)', subtitle: 'Slide 23-24 · Tiến trình phát triển AI Agent' },
-  { page: 12, title: 'Giới hạn 1: Cut-off Knowledge & Bong bóng thời gian', content: '• LLM chỉ biết dữ liệu đến thời điểm cutoff date khi huấn luyện.\n• Để khắc phục: Cần dùng RAG (Retrieval-Augmented Generation) hoặc Search Tool.', subtitle: 'Slide 20 · Giới hạn bẩm sinh của LLM' },
-  { page: 13, title: 'Giới hạn 2: Hallucination (Tự tin bịa tin)', content: '• LLM tạo ra câu từ mượt mà nhưng nội dung có thể hoàn toàn sai sự thật (hallucination).\n• Không bao giờ tin tưởng tuyệt đối vào câu trả lời của LLM mà không có bằng chứng trích dẫn (citation).', subtitle: 'Slide 20 · Giới hạn bẩm sinh của LLM' },
-  { page: 14, title: 'Giới hạn 3: Context Window & Lost in the Middle', content: '• Mặc dù Context Window lên tới 1M-2M token, thông tin ở giữa văn bản dài dễ bị mô hình bỏ qua (Lost in the middle / Needle in a haystack).', subtitle: 'Slide 20 · Giới hạn bẩm sinh của LLM' },
-  { page: 15, title: 'Prompt 4 Lớp chuẩn hóa', content: '1. System Instruction (Vai trò & Quy tắc)\n2. User Input (Yêu cầu cụ thể)\n3. Context / Grounding Data (Dữ liệu đầu vào)\n4. Output Format (Định dạng JSON/Markdown mong muốn)', subtitle: 'Slide 28 · Kỹ thuật Prompt Engineering' },
+  { page: 6, title: 'Bên trong LLM: Kiến trúc Transformer', pdfPage: 8, content: '• Transformer giải quyết bài toán xử lý chuỗi song song nhờ cơ chế Self-Attention.\n• Self-Attention giúp mô hình hiểu mối liên hệ giữa các từ dù ở xa nhau trong đoạn văn.', subtitle: 'Cơ chế cốt lõi của GPT, Claude, Gemini' },
+  { page: 7, title: 'Cơ chế Next Token Prediction', pdfPage: 11, content: 'LLM vận hành bằng cách liên tục dự đoán từ/token tiếp theo dựa trên xác suất thống kê từ dữ liệu huấn luyện khổng lồ.\nFormula: P(token_n | token_1, ..., token_n-1)', subtitle: 'Bản chất của việc tạo ra văn bản tự nhiên' },
+  { page: 8, title: 'Token & Đơn vị đo lường', pdfPage: 13, content: '• Token không hẳn là 1 từ. 1 Token ≈ 0.75 từ tiếng Anh hoặc ~1 ký tự tiếng Việt.\n• Token quyết định độ dài Context Window và chi phí gọi API.', subtitle: 'Slide 13 · 1.000 token ≈ 750 từ' },
+  { page: 9, title: 'Tokenomics: Tại sao Output đắt hơn Input 3-5 lần?', pdfPage: 27, content: '• Input Token được tính song song 1 lần (Parallel processing).\n• Output Token phải sinh tuần tự từng từ một (Autoregressive step-by-step), tiêu tốn năng lượng tính toán gấp nhiều lần.', subtitle: 'Slide 13, 27 · Tối ưu chi phí sản phẩm AI' },
+  { page: 10, title: 'LLM không phải là Chatbot!', pdfPage: 10, content: '• Chatbot chỉ là 1 giao diện người dùng (UI).\n• LLM là Bộ não xử lý ngôn ngữ tự nhiên nền tảng (Reasoning Engine).\n• Bạn có thể dùng LLM để trích xuất dữ liệu, dịch thuật, lập trình, lập kế hoạch.', subtitle: 'Slide 10 · Nhận thức nền tảng' },
+  { page: 11, title: '4 Level Agent: Từ LLM trần đến Multi-Agent', pdfPage: 23, content: '• Level 1: Naked LLM (Chỉ chat đơn thuần)\n• Level 2: Tool-using Agent (Gắn Google Search, Python REPL, SQL)\n• Level 3: Workflow Agent (Prompt Chaining & Routing)\n• Level 4: Multi-Agent System (Hệ thống nhiều agent phối hợp)', subtitle: 'Slide 23-24 · Tiến trình phát triển AI Agent' },
+  { page: 12, title: 'Giới hạn 1: Cut-off Knowledge & Bong bóng thời gian', pdfPage: 20, content: '• LLM chỉ biết dữ liệu đến thời điểm cutoff date khi huấn luyện.\n• Để khắc phục: Cần dùng RAG (Retrieval-Augmented Generation) hoặc Search Tool.', subtitle: 'Slide 20 · Giới hạn bẩm sinh của LLM' },
+  { page: 13, title: 'Giới hạn 2: Hallucination (Tự tin bịa tin)', pdfPage: 20, content: '• LLM tạo ra câu từ mượt mà nhưng nội dung có thể hoàn toàn sai sự thật (hallucination).\n• Không bao giờ tin tưởng tuyệt đối vào câu trả lời của LLM mà không có bằng chứng trích dẫn (citation).', subtitle: 'Slide 20 · Giới hạn bẩm sinh của LLM' },
+  { page: 14, title: 'Giới hạn 3: Context Window & Lost in the Middle', pdfPage: 14, content: '• Mặc dù Context Window lên tới 1M-2M token, thông tin ở giữa văn bản dài dễ bị mô hình bỏ qua (Lost in the middle / Needle in a haystack).', subtitle: 'Slide 14 · Giới hạn bẩm sinh của LLM' },
+  { page: 15, title: 'Prompt 4 Lớp chuẩn hóa', pdfPage: 28, content: '1. System Instruction (Vai trò & Quy tắc)\n2. User Input (Yêu cầu cụ thể)\n3. Context / Grounding Data (Dữ liệu đầu vào)\n4. Output Format (Định dạng JSON/Markdown mong muốn)', subtitle: 'Slide 28 · Kỹ thuật Prompt Engineering' },
   { page: 16, title: 'Thực hành gọi API Gemini đầu tiên', content: '• Thiết lập API Key trong file .env\n• Gửi request với systemInstruction và temperature=0.2\n• Nhận kết quả phản hồi có định dạng structured data', subtitle: 'Thực hành Lab' },
-  { page: 17, title: 'Nguồn sự thật (Source of Truth)', content: 'Hệ thống AI đáng tin cậy phải luôn trích dẫn nguồn sự thật rõ ràng (File PDF, Slide, Trang số) để người dùng dễ dàng kiểm chứng.', subtitle: 'Nguyên tắc thiết kế sản phẩm AI' },
+  { page: 17, title: 'Nguồn sự thật (Source of Truth)', pdfPage: 20, content: 'Hệ thống AI đáng tin cậy phải luôn trích dẫn nguồn sự thật rõ ràng (File PDF, Slide, Trang số) để người dùng dễ dàng kiểm chứng.', subtitle: 'Slide 20 · Nguyên tắc thiết kế sản phẩm AI' },
   { page: 18, title: 'Phân biệt Task Automation vs Task Augmentation', content: '• Automation: AI tự động hóa 100% không cần người duyệt.\n• Augmentation: AI hỗ trợ gợi ý, con người là người ra quyết định cuối cùng (Human-in-the-loop).', subtitle: 'Nguyên tắc PAIR' },
-  { page: 19, title: 'Tối ưu hóa Temperature & Top-P', content: '• Temperature = 0.0: Câu trả lời chính xác, nhất quán, dùng cho trích xuất dữ liệu & code.\n• Temperature = 0.7 - 1.0: Câu trả lời sáng tạo, dùng cho viết lách & brainstorm.', subtitle: 'Tham số điều khiển LLM' },
+  { page: 19, title: 'Tối ưu hóa Temperature & Top-P', pdfPage: 29, content: '• Temperature = 0.0: Câu trả lời chính xác, nhất quán, dùng cho trích xuất dữ liệu & code.\n• Temperature = 0.7 - 1.0: Câu trả lời sáng tạo, dùng cho viết lách & brainstorm.', subtitle: 'Slide 29 · Tham số điều khiển LLM' },
   { page: 20, title: 'Kiểm soát Hallucination bằng Grounding', content: 'Cung cấp dữ liệu gốc trực tiếp vào prompt và yêu cầu AI: "Nếu thông tin không có trong tài liệu, hãy trả lời không biết, tuyệt đối không tự bịa thông tin."', subtitle: 'Quy tắc G10 - Tránh bịa tin' },
   { page: 21, title: 'Structured Output với JSON Schema', content: 'Ép buộc LLM trả về đúng định dạng JSON tuân thủ Schema để phần mềm backend có thể parse và xử lý trực tiếp.', subtitle: 'JSON Mode & Tool Calling' },
   { page: 22, title: 'Cấu trúc bài giảng Day 01 recap', content: 'Tổng hợp 5 điểm cốt lõi đã học trong Day 01 làm tiền đề chuyển tiếp sang Day 02.', subtitle: 'Tóm tắt bài học' },
-  { page: 23, title: 'Chi phí triển khai LLM thực tế', content: 'Tính toán chi phí token theo tháng cho 1.000 người dùng dựa trên Input Token và Output Token trung bình.', subtitle: 'Bài toán kinh tế AI' },
+  { page: 23, title: 'Chi phí triển khai LLM thực tế', pdfPage: 27, content: 'Tính toán chi phí token theo tháng cho 1.000 người dùng dựa trên Input Token và Output Token trung bình.', subtitle: 'Bài toán kinh tế AI' },
   { page: 24, title: 'Các dòng mô hình phổ biến năm 2026', content: '• Gemini 1.5 Pro / Flash\n• GPT-4o / Claude 3.5 Sonnet\n• Open-source: Llama 3 / DeepSeek V3', subtitle: 'Landscape LLM' },
   { page: 25, title: 'An toàn dữ liệu & Quyền riêng tư', content: '• Không đưa dữ liệu cá nhân nhạy cảm (PII) lên mô hình công khai.\n• Sử dụng API trả phí để đảm bảo dữ liệu không bị dùng cho huấn luyện.', subtitle: 'Bảo mật dữ liệu' },
   { page: 26, title: 'Chuẩn bị cho Day 02', content: 'Từ nền tảng LLM hôm nay, ngày mai chúng ta sẽ học cách xác định đúng bài toán kinh doanh để áp dụng AI hiệu quả.', subtitle: 'Chuyển tiếp bài học' },
@@ -34,17 +34,17 @@ export const DAY01_SLIDES = [
 export const DAY02_SLIDES = [
   { page: 1, title: 'Xác định bài toán cho AI (Problem Statement)', content: 'Từ yêu cầu mơ hồ đến Problem Statement rõ ràng và khả thi', subtitle: 'AI IN ACTION · DAY 02' },
   { page: 2, title: 'Agenda Buổi 2', content: '• Problem Discovery (Double Diamond)\n• Problem Statement 9 Trường\n• PAIR ① AI có thêm giá trị không?\n• PAIR ② Automate/Augment -> Rule/Workflow/Agent\n• PAIR ③ Reward function & success criteria\n• Khi AI sai & UX/HITL', subtitle: 'Khung lý thuyết & Thực hành Lab' },
-  { page: 3, title: 'Mô hình Double Diamond (Don Norman / Design Council)', content: '• Diamond 1: Discovery (Mở rộng) -> Define (Hội tụ tìm đúng bài toán gốc).\n• Diamond 2: Develop (Mở rộng) -> Deliver (Hội tụ chọn giải pháp tốt nhất).', subtitle: 'Slide 16 · Tìm đúng bài toán trước khi làm' },
+  { page: 3, title: 'Mô hình Double Diamond (Don Norman / Design Council)', pdfPage: 3, content: '• Diamond 1: Discovery (Mở rộng) -> Define (Hội tụ tìm đúng bài toán gốc).\n• Diamond 2: Develop (Mở rộng) -> Deliver (Hội tụ chọn giải pháp tốt nhất).', subtitle: 'Slide 3 · Tìm đúng bài toán trước khi làm' },
   { page: 4, title: 'Discover: Khám phá vấn đề thực tế', content: '• Quan sát thực tế công việc (Observation)\n• Phỏng vấn người dùng sâu (User Interview)\n• Nhật ký hành vi (Diary Study)', subtitle: 'Giai đoạn phân kỳ 1' },
   { page: 5, title: 'Define: Xác định bài toán cốt lõi', content: 'Cô đọng toàn bộ thông tin thu thập được thành câu phát biểu bài toán rõ ràng, tránh giải quyết sai vấn đề.', subtitle: 'Giai đoạn hội tụ 1' },
-  { page: 6, title: 'Khung PAIR: 3 Câu hỏi bắt buộc', content: '• Bước 1: AI có tạo ra giá trị khác biệt so với phần mềm truyền thống không?\n• Bước 2: Chọn Automate hay Augment? Dùng Rule, Workflow hay Agent?\n• Bước 3: Hàm thưởng (Reward function) & Tiêu chí thành công là gì?', subtitle: 'Slide 13 · PAIR Framework' },
-  { page: 7, title: 'PAIR Bước 1: Có cần AI không?', content: 'Nếu bài toán có thể giải quyết bằng 1 thuật toán if/else hoặc phần mềm thông thường với độ chính xác 100%, ĐỪNG DÙNG AI!', subtitle: 'Nguyên tắc tiết kiệm & đơn giản' },
-  { page: 8, title: 'PAIR Bước 2: 3 Cấp giải pháp (Rule / Workflow / Agent)', content: '• Cấp 1: Rule-based (Hệ luật tay, Regex, If/Else)\n• Cấp 2: Workflow (Prompt Chaining có bước cố định)\n• Cấp 3: Agent (AI tự quyết định bước đi tiếp theo)', subtitle: 'Slide 18-19 · Nguyên tắc luôn bắt đầu từ Cấp 1' },
-  { page: 9, title: 'PAIR Bước 3: Reward Function & Success Criteria', content: 'Định nghĩa rõ ràng: Thế nào là một câu trả lời ĐÚNG và THÀNH CÔNG của sản phẩm AI?', subtitle: 'Slide 22 · Tiêu chuẩn đánh giá' },
-  { page: 10, title: 'Phân tích Cost-of-Error (Chi phí khi AI đoán sai)', content: '• Cost-of-error THẤP (gợi ý nhạc, viết nháp): AI sai không gây hậu quả lớn.\n• Cost-of-error CAO (y tế, tài chính, pháp lý): AI sai gây thiệt hại nặng nề.', subtitle: 'Slide 22-23 · Quyết định UX sản phẩm' },
-  { page: 11, title: 'Thiết kế Human-in-the-loop (HITL)', content: 'Khi Cost-of-Error cao, thiết kế giao diện dạng AUGMENTATION: AI đề xuất nháp -> Con người kiểm tra và bấm chấp nhận/chỉnh sửa.', subtitle: 'Slide 24 · An toàn sản phẩm AI' },
-  { page: 12, title: 'Precision vs Recall trong sản phẩm AI', content: '• High Precision: Thà bỏ sót chứ không trả lời sai (Dùng cho pháp lý, y tế).\n• High Recall: Thà bắt nhầm còn hơn bỏ sót (Dùng cho tìm kiếm bài viết, gợi ý).', subtitle: 'Slide 24 · Cân bằng Trade-off' },
-  { page: 13, title: 'Bản Problem Statement 9 Trường hoàn chỉnh', content: '1. Bối cảnh & Người dùng\n2. Vấn đề hiện tại\n3. Hậu quả & Chi phí\n4. Giá trị kỳ vọng\n5. Cấp giải pháp (Rule/Workflow/Agent)\n6. Phương án UX (Augment/Automate)\n7. Risk & Cost-of-error\n8. Dữ liệu sẵn có\n9. Tiêu chí Go/No-Go', subtitle: 'Slide 27 · Deliverable chuẩn VLearn' },
+  { page: 6, title: 'Khung PAIR: 3 Câu hỏi bắt buộc', pdfPage: 13, content: '• Bước 1: AI có tạo ra giá trị khác biệt so với phần mềm truyền thống không?\n• Bước 2: Chọn Automate hay Augment? Dùng Rule, Workflow hay Agent?\n• Bước 3: Hàm thưởng (Reward function) & Tiêu chí thành công là gì?', subtitle: 'Slide 13 · PAIR Framework' },
+  { page: 7, title: 'PAIR Bước 1: Có cần AI không?', pdfPage: 13, content: 'Nếu bài toán có thể giải quyết bằng 1 thuật toán if/else hoặc phần mềm thông thường với độ chính xác 100%, ĐỪNG DÙNG AI!', subtitle: 'Nguyên tắc tiết kiệm & đơn giản' },
+  { page: 8, title: 'PAIR Bước 2: 3 Cấp giải pháp (Rule / Workflow / Agent)', pdfPage: 18, content: '• Cấp 1: Rule-based (Hệ luật tay, Regex, If/Else)\n• Cấp 2: Workflow (Prompt Chaining có bước cố định)\n• Cấp 3: Agent (AI tự quyết định bước đi tiếp theo)', subtitle: 'Slide 18-19 · Nguyên tắc luôn bắt đầu từ Cấp 1' },
+  { page: 9, title: 'PAIR Bước 3: Reward Function & Success Criteria', pdfPage: 22, content: 'Định nghĩa rõ ràng: Thế nào là một câu trả lời ĐÚNG và THÀNH CÔNG của sản phẩm AI?', subtitle: 'Slide 22 · Tiêu chuẩn đánh giá' },
+  { page: 10, title: 'Phân tích Cost-of-Error (Chi phí khi AI đoán sai)', pdfPage: 15, content: '• Cost-of-error THẤP (gợi ý nhạc, viết nháp): AI sai không gây hậu quả lớn.\n• Cost-of-error CAO (y tế, tài chính, pháp lý): AI sai gây thiệt hại nặng nề.', subtitle: 'Slide 15, 17 · Quyết định UX sản phẩm' },
+  { page: 11, title: 'Thiết kế Human-in-the-loop (HITL)', pdfPage: 24, content: 'Khi Cost-of-Error cao, thiết kế giao diện dạng AUGMENTATION: AI đề xuất nháp -> Con người kiểm tra và bấm chấp nhận/chỉnh sửa.', subtitle: 'Slide 24 · An toàn sản phẩm AI' },
+  { page: 12, title: 'Precision vs Recall trong sản phẩm AI', pdfPage: 23, content: '• High Precision: Thà bỏ sót chứ không trả lời sai (Dùng cho pháp lý, y tế).\n• High Recall: Thà bắt nhầm còn hơn bỏ sót (Dùng cho tìm kiếm bài viết, gợi ý).', subtitle: 'Slide 23 · Cân bằng Trade-off' },
+  { page: 13, title: 'Bản Problem Statement 9 Trường hoàn chỉnh', pdfPage: 27, content: '1. Bối cảnh & Người dùng\n2. Vấn đề hiện tại\n3. Hậu quả & Chi phí\n4. Giá trị kỳ vọng\n5. Cấp giải pháp (Rule/Workflow/Agent)\n6. Phương án UX (Augment/Automate)\n7. Risk & Cost-of-error\n8. Dữ liệu sẵn có\n9. Tiêu chí Go/No-Go', subtitle: 'Slide 27 · Deliverable chuẩn VLearn' },
   { page: 14, title: 'Đánh giá Feasibility & Khả thi về Dữ liệu', content: 'Kiểm tra xem bạn có đủ dữ liệu chất lượng (clean data) để AI học và trích xuất thông tin hay không.', subtitle: 'Thẩm định dữ liệu' },
   { page: 15, title: 'Quy trình Lab chiều: Tìm & chốt bài toán nhóm', content: '• Cá nhân chọn 5 bài toán -> Nhóm phản biện chéo chọn 1 bài toán tốt nhất -> Viết Problem Statement.', subtitle: 'Thực hành nhóm' },
   { page: 16, title: 'Case Study 1: Tự động hóa hỗ trợ khách hàng', content: 'Phân tích chi phí khi dùng Chatbot tự động 100% vs Trợ lý soạn sẵn phản hồi cho CSKH duyệt.', subtitle: 'Phân tích thực tế' },
@@ -78,11 +78,12 @@ export const COURSE_DAYS = [
     keyConcepts: [
       { id: 'c1_1', name: 'LLM không phải Chatbot', citation: 'slide 10' },
       { id: 'c1_2', name: 'Token & Tốc độ/Chi phí', citation: 'slide 13, 27' },
-      { id: 'c1_3', name: '3 Giới hạn Bẩm sinh (Hallucination, Context)', citation: 'slide 20' },
+      { id: 'c1_3', name: '3 Giới hạn Bẩm sinh (Hallucination, Context)', citation: 'slide 20, 14' },
       { id: 'c1_4', name: '4 Level Agent (LLM trần -> Multi-Agent)', citation: 'slide 23-24' },
-      { id: 'c1_5', name: 'Prompt 4 Lớp', citation: 'slide 28' }
+      { id: 'c1_5', name: 'Prompt 4 Lớp', citation: 'slide 28' },
+      { id: 'c1_6', name: 'Temperature & Top-P', citation: 'slide 29' }
     ],
-    summaryContent: `Buổi 1 tập trung vào nền tảng cốt lõi của Large Language Model (LLM). Học viên tìm hiểu rằng LLM là bộ não ngôn ngữ chứ không chỉ là giao diện chatbot [slide 10]. Khái niệm Token giải thích tại sao output đắt gấp 3-5x input [slide 13, 27]. Khóa học làm rõ 3 giới hạn bẩm sinh của LLM: hallucination, bong bóng thời gian và giới hạn context [slide 20]. Cuối cùng là phân loại 4 level agent [slide 23] và kỹ thuật cấu trúc prompt 4 lớp [slide 28].`
+    summaryContent: `Buổi 1 tập trung vào nền tảng cốt lõi của Large Language Model (LLM). Học viên tìm hiểu rằng LLM là bộ não ngôn ngữ chứ không chỉ là giao diện chatbot [slide 10]. Khái niệm Token giải thích tại sao output đắt gấp 3-5x input [slide 13, 27]. Khóa học làm rõ 3 giới hạn bẩm sinh của LLM: hallucination & cutoff [slide 20], Lost in the Middle [slide 14]. Cuối cùng là phân loại 4 level agent [slide 23-24] và kỹ thuật cấu trúc prompt 4 lớp [slide 28].`
   },
   {
     id: 'day02',
@@ -99,10 +100,12 @@ export const COURSE_DAYS = [
       { id: 'c2_1', name: 'Problem Statement 9 Trường', citation: 'slide 27' },
       { id: 'c2_2', name: 'PAIR Framework 3 Bước', citation: 'slide 13' },
       { id: 'c2_3', name: '3 Cấp giải pháp: Rule / Workflow / Agent', citation: 'slide 18-19' },
-      { id: 'c2_4', name: 'Reward Function & Cost-of-error', citation: 'slide 22-23' },
-      { id: 'c2_5', name: 'Precision vs Recall & Human-in-the-loop', citation: 'slide 24' }
+      { id: 'c2_4', name: 'Cost-of-error & Automate/Augment', citation: 'slide 15, 17' },
+      { id: 'c2_5', name: 'Precision vs Recall', citation: 'slide 23' },
+      { id: 'c2_6', name: 'Human-in-the-loop', citation: 'slide 24' },
+      { id: 'c2_7', name: 'Reward Function', citation: 'slide 22' }
     ],
-    summaryContent: `Buổi 2 đi sâu vào phương pháp luận xác định bài toán kinh doanh/sản phẩm phù hợp với AI. Áp dụng PAIR 3 bước để trả lời "Có cần AI không?" [slide 13]. Định nghĩa 3 cấp giải pháp Rule/Workflow/Agent để luôn bắt đầu từ giải pháp đơn giản nhất [slide 18-19]. Phân tích cost-of-error để chọn giữa Augment hay Automate và thiết kế Human-in-the-loop [slide 22-24].`
+    summaryContent: `Buổi 2 đi sâu vào phương pháp luận xác định bài toán kinh doanh/sản phẩm phù hợp với AI. Áp dụng PAIR 3 bước để trả lời "Có cần AI không?" [slide 13]. Định nghĩa 3 cấp giải pháp Rule/Workflow/Agent để luôn bắt đầu từ giải pháp đơn giản nhất [slide 18-19]. Phân tích cost-of-error để chọn giữa Augment hay Automate và thiết kế Human-in-the-loop [slide 15, 17, 24].`
   }
 ];
 
@@ -150,7 +153,7 @@ export const PREBAKED_EXPERIENCE_PATHS = {
         sourceConcept: 'Giới hạn bẩm sinh LLM (Hallucination)',
         sourceRef: 'Day 01 - slide 20',
         targetConcept: 'PAIR Framework & Cost-of-error',
-        targetRef: 'Day 02 - slide 13, 22',
+        targetRef: 'Day 02 - slide 15, 17',
         explanation: 'Day 01 nêu rõ LLM có thể hallucinate -> Day 02 dùng chính điều này để phân tích Cost-of-error và quyết định bài toán nào nên Augment thay vì Automate.'
       },
       {
@@ -186,7 +189,34 @@ export const PREBAKED_EXPERIENCE_PATHS = {
           'Vì Augment không cần dùng Prompt 4 lớp.'
         ],
         correctAnswer: 1,
-        explanation: 'Chính xác! Khi cost-of-error cao (do nguy cơ hallucination), thiết kế Augment giữ con người trong vòng lặp để verify kết quả.'
+        explanation: 'Khi cost-of-error cao (do nguy cơ hallucination), thiết kế Augment giữ con người trong vòng lặp để verify kết quả.',
+        citation: 'Day 01 - slide 20 → Day 02 - slide 15, 17'
+      },
+      {
+        id: 'q2',
+        question: 'Nguyên tắc chọn cấp giải pháp từ Day 01 (4 Level Agent) sang Day 02 (Rule / Workflow / Agent) là gì?',
+        options: [
+          'Luôn bắt đầu từ Agent vì mạnh nhất.',
+          'Luôn bắt đầu từ cấp đơn giản nhất (Rule/Workflow) trước khi nâng lên Agent.',
+          'Bỏ qua Rule vì không dùng LLM.',
+          'Chỉ dùng Multi-Agent cho mọi bài toán.'
+        ],
+        correctAnswer: 1,
+        explanation: 'Day 02 kế thừa tư duy phân cấp của Day 01: bắt đầu đơn giản để giảm chi phí và rủi ro.',
+        citation: 'Day 01 - slide 23-24 → Day 02 - slide 18-19'
+      },
+      {
+        id: 'q3',
+        question: 'Khái niệm Token ở Day 01 hỗ trợ bước nào trong Problem Statement Day 02?',
+        options: [
+          'Chỉ dùng để trang trí slide.',
+          'Đánh giá feasibility / chi phí vận hành của bài toán AI.',
+          'Thay thế hoàn toàn Reward Function.',
+          'Loại bỏ nhu cầu Human-in-the-loop.'
+        ],
+        correctAnswer: 1,
+        explanation: 'Hiểu Tokenomics giúp ước lượng chi phí API và quyết định bài toán có khả thi về kinh tế hay không.',
+        citation: 'Day 01 - slide 27 → Day 02 - slide 27'
       }
     ]
   },

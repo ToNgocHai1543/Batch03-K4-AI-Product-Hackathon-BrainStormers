@@ -22,6 +22,7 @@ export default function App() {
   const [zoomLevel, setZoomLevel] = useState(100); // 50% - 200%
   const [loading, setLoading] = useState(false);
   const [bridgeData, setBridgeData] = useState(null);
+  const [bridgeCache, setBridgeCache] = useState({});
 
   // VLearn Sidebar & Accordion States
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
@@ -122,7 +123,13 @@ export default function App() {
   };
 
   // Fetch / Generate bridge data whenever day or pathMode changes
-  const fetchBridgeData = async (mode = pathMode) => {
+  const fetchBridgeData = async (mode = pathMode, force = false) => {
+    const cacheKey = `${selectedDayIndex}_${mode}`;
+    if (!force && bridgeCache[cacheKey]) {
+      setBridgeData(bridgeCache[cacheKey]);
+      return;
+    }
+
     setLoading(true);
     try {
       const data = await llmService.generateLearningBridge({
@@ -132,6 +139,10 @@ export default function App() {
         forceMock: mode !== 'happy' || !import.meta.env.VITE_GEMINI_API_KEY
       });
       setBridgeData(data);
+      setBridgeCache(prev => ({
+        ...prev,
+        [cacheKey]: data
+      }));
     } catch (err) {
       console.error('Lỗi sinh data bridge:', err);
     } finally {
@@ -140,7 +151,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    fetchBridgeData(pathMode);
+    fetchBridgeData(pathMode, false);
   }, [selectedDayIndex, pathMode]);
 
   return (
@@ -589,7 +600,7 @@ export default function App() {
                     bridgeData={bridgeData}
                     fromDay={previousDay}
                     toDay={currentDay}
-                    onRefreshLLM={() => fetchBridgeData(pathMode)}
+                    onRefreshLLM={() => fetchBridgeData(pathMode, true)}
                     loading={loading}
                     onSkipBridge={() => {
                       setRightPanelTab('tutor');

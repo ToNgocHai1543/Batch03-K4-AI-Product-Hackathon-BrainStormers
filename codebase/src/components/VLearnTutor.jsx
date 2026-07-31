@@ -53,7 +53,8 @@ export default function VLearnTutor({ currentDay, onJumpToSlide }) {
   };
 
   const renderLineInlineParts = (line, fullText) => {
-    const parts = line.split(/(\*\*.*?\*\*|\[slide\s*\d+(?:-\d+)?\])/gi);
+    // Support [slide 10], [slide 23-24], [slide 15, 17]
+    const parts = line.split(/(\*\*.*?\*\*|\[slide\s*[\d\s,\-–]+\])/gi);
 
     return parts.map((part, pIdx) => {
       // Match **bold**
@@ -65,10 +66,10 @@ export default function VLearnTutor({ currentDay, onJumpToSlide }) {
         );
       }
 
-      // Match [slide XX] or [slide XX-YY]
-      const slideMatch = part.match(/\[slide\s*(\d+)(?:-\d+)?\]/i);
+      const slideMatch = part.match(/\[slide\s*([\d\s,\-–]+)\]/i);
       if (slideMatch && onJumpToSlide) {
-        const pageNum = slideMatch[1];
+        const label = slideMatch[1].replace(/\s+/g, ' ').trim();
+        const pageNum = label.match(/\d+/)?.[0];
         const dayMatch = (typeof line === 'string' && line.match(/(Day\s*\d{1,2})/i)) || fullText.match(/(Day\s*\d{1,2})/i);
         const dayCode = dayMatch ? dayMatch[1] : null;
 
@@ -79,7 +80,7 @@ export default function VLearnTutor({ currentDay, onJumpToSlide }) {
             className="text-indigo-600 hover:text-indigo-900 hover:underline font-bold text-[10px] bg-indigo-50 hover:bg-indigo-100/80 px-1 py-0.2 mx-0.5 rounded border border-indigo-200/50 transition-all cursor-pointer"
             title={`Click để tự động chuyển sang ${dayCode || currentDay.code} và mở Slide trang ${pageNum}`}
           >
-            [slide {pageNum}]
+            [slide {label}]
           </button>
         );
       }
@@ -338,22 +339,22 @@ export default function VLearnTutor({ currentDay, onJumpToSlide }) {
       </div>
 
       {/* Input Box */}
-      <div className="pt-1.5 relative shrink-0">
-        <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}>
+      <div className="pt-2 relative shrink-0">
+        <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} className="relative flex items-center">
           <input 
             type="text"
             value={inputQuestion}
             onChange={(e) => setInputQuestion(e.target.value)}
             placeholder={`Hỏi VLearn Tutor về ${currentDay.code}...`}
-            className="w-full py-1.5 pl-3 pr-8 rounded-full border border-slate-300 text-[11px] placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 bg-white shadow-3xs font-medium"
+            className="w-full h-11 py-2.5 pl-4 pr-14 rounded-full border border-indigo-300 text-[13px] placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 bg-white shadow-3xs font-medium"
           />
           <button 
             type="submit"
             disabled={!inputQuestion.trim() || isTyping}
-            className="absolute right-1 top-2.5 w-5.5 h-5.5 rounded-full bg-[#0f2b5c] text-white flex items-center justify-center hover:bg-[#1b365d] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#0f2b5c] text-white flex items-center justify-center hover:bg-[#1b365d] transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
             title="Gửi câu hỏi"
           >
-            <Send size={11} className="ml-0.5" />
+            <Send size={16} className="ml-0.5" />
           </button>
         </form>
       </div>
