@@ -46,10 +46,16 @@ export default function PdfSlideCanvas({ pdfPath, targetPageNum, zoomLevel = 100
   useEffect(() => {
     const pageNum = typeof targetPageNum === 'object' ? targetPageNum?.page : targetPageNum;
     if (pageNum && containerRef.current) {
-      const pageEl = document.getElementById(`slide-page-${pageNum}`);
-      if (pageEl) {
-        pageEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      const scrollToElement = () => {
+        const pageEl = document.getElementById(`slide-page-${pageNum}`);
+        if (pageEl) {
+          pageEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      };
+
+      scrollToElement();
+      const timer = setTimeout(scrollToElement, 150);
+      return () => clearTimeout(timer);
     }
   }, [targetPageNum, numPages]);
 

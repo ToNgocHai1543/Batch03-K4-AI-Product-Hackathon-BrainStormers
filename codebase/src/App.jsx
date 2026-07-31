@@ -53,13 +53,31 @@ export default function App() {
     if (isNaN(pageNum) || pageNum <= 0) return;
 
     if (targetDayCode) {
-      const targetIdx = COURSE_DAYS.findIndex(d => 
-        d.code.toLowerCase() === targetDayCode.toLowerCase() || 
-        d.id.toLowerCase() === targetDayCode.toLowerCase()
-      );
+      const cleanTarget = targetDayCode.replace(/\s+/g, '').toLowerCase();
+      const targetDigits = targetDayCode.match(/\d+/)?.[0];
+      const targetNum = targetDigits ? parseInt(targetDigits, 10) : null;
 
-      if (targetIdx !== -1 && targetIdx !== selectedDayIndex) {
-        setSelectedDayIndex(targetIdx);
+      const targetIdx = COURSE_DAYS.findIndex(d => {
+        const dCodeClean = d.code.replace(/\s+/g, '').toLowerCase();
+        const dIdClean = d.id.replace(/\s+/g, '').toLowerCase();
+
+        if (dCodeClean === cleanTarget || dIdClean === cleanTarget) {
+          return true;
+        }
+
+        const dDigits = d.code.match(/\d+/)?.[0] || d.id.match(/\d+/)?.[0];
+        if (targetNum !== null && dDigits) {
+          return parseInt(dDigits, 10) === targetNum;
+        }
+
+        return false;
+      });
+
+      if (targetIdx !== -1) {
+        if (targetIdx !== selectedDayIndex) {
+          setSelectedDayIndex(targetIdx);
+          setExpandedDays(prev => ({ ...prev, [targetIdx]: true }));
+        }
       }
     }
 
