@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   CheckSquare, Sparkles, HelpCircle, ThumbsDown, FileText, ArrowRight,
-  ExternalLink, Bot, Loader2
+  ExternalLink, Bot, Loader2, XCircle
 } from 'lucide-react';
 import FeedbackModal from './FeedbackModal';
 import { llmService } from '../services/llmService';
+import { getCitationExplanation } from '../data/citationMap';
 
 export default function LearningBridge({ 
   bridgeData, 
@@ -23,6 +24,23 @@ export default function LearningBridge({
   const [toastMessage, setToastMessage] = useState(null);
   const [quizItems, setQuizItems] = useState([]);
   const [quizLoading, setQuizLoading] = useState(false);
+  const [smartLinkData, setSmartLinkData] = useState(null); // { citation: string, explanation: string }
+
+  // Automatically reset smart link when day changes to avoid stale explanations
+  useEffect(() => {
+    setSmartLinkData(null);
+  }, [fromDay, toDay]);
+
+  const handleJumpToSlideWithExplanation = (pageNum, dayCode, citationText) => {
+    if (onJumpToSlide) {
+      onJumpToSlide(pageNum, dayCode);
+    }
+    const explanation = getCitationExplanation(citationText);
+    setSmartLinkData({
+      citation: citationText,
+      explanation
+    });
+  };
 
   useEffect(() => {
     if (bridgeData?.quiz) {
@@ -238,7 +256,7 @@ export default function LearningBridge({
                     <div className="flex items-center justify-between pt-1 border-t border-slate-100">
                       {pageNum && onJumpToSlide ? (
                         <button
-                          onClick={() => onJumpToSlide(pageNum, dayCode)}
+                          onClick={() => handleJumpToSlideWithExplanation(pageNum, dayCode, item.citation)}
                           className="px-2.5 py-0.5 rounded bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-800 font-bold text-[12px] border border-indigo-200/80 flex items-center gap-1 transition-all cursor-pointer whitespace-nowrap"
                           title={`Click để chuyển sang ${dayCode || fromDay.code} và mở Slide trang ${pageNum}`}
                         >
@@ -288,7 +306,7 @@ export default function LearningBridge({
                     <div className="flex flex-wrap items-center gap-1 text-[13px] font-bold">
                       {srcPage && onJumpToSlide ? (
                         <button 
-                          onClick={() => onJumpToSlide(srcPage, srcDay)}
+                          onClick={() => handleJumpToSlideWithExplanation(srcPage, srcDay, link.sourceRef)}
                           className="px-2 py-0.5 rounded bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-900 border border-indigo-200 transition-all cursor-pointer flex items-center gap-1 truncate max-w-[140px]"
                           title={`Bấm để mở ${srcDay ? srcDay + ' - ' : ''}Slide trang ${srcPage}`}
                         >
@@ -304,7 +322,7 @@ export default function LearningBridge({
 
                       {targetPage && onJumpToSlide ? (
                         <button 
-                          onClick={() => onJumpToSlide(targetPage, targetDay)}
+                          onClick={() => handleJumpToSlideWithExplanation(targetPage, targetDay, link.targetRef)}
                           className="px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-900 border border-emerald-200 transition-all cursor-pointer flex items-center gap-1 truncate max-w-[140px]"
                           title={`Bấm để mở ${targetDay ? targetDay + ' - ' : ''}Slide trang ${targetPage}`}
                         >
@@ -414,7 +432,7 @@ export default function LearningBridge({
                         {q.citation && (
                           pageNum && onJumpToSlide ? (
                             <button
-                              onClick={() => onJumpToSlide(pageNum, dayCode)}
+                              onClick={() => handleJumpToSlideWithExplanation(pageNum, dayCode, q.citation)}
                               className="text-[11px] font-bold text-indigo-700 hover:underline flex items-center gap-1"
                             >
                               📍 {q.citation} <ExternalLink size={10} />
@@ -463,6 +481,37 @@ export default function LearningBridge({
         </div>
       )}
       </div>
+
+      {/* 🚀 SMART HIGHLIGHT LINKER POPUP CARD (DOCK/OVERLAY) */}
+      {smartLinkData && (
+        <div className="p-3.5 bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-xl shadow-lg border border-indigo-500/40 animate-fade-in flex flex-col space-y-2.5 z-40 shrink-0">
+          <div className="flex items-center justify-between border-b border-indigo-400/25 pb-1.5">
+            <span className="text-[11px] font-bold text-indigo-300 uppercase tracking-widest flex items-center gap-1">
+              <Sparkles size={11} className="text-yellow-400 shrink-0" /> Smart Highlight Linker
+            </span>
+            <button 
+              onClick={() => setSmartLinkData(null)}
+              className="text-slate-400 hover:text-white transition-colors cursor-pointer p-0.5 rounded-full hover:bg-white/10"
+              title="Đóng bảng phân tích"
+            >
+              <XCircle size={14} />
+            </button>
+          </div>
+
+          <div className="space-y-1">
+            <div className="text-[13px] font-bold text-slate-100 flex items-center gap-1.5">
+              <FileText size={13} className="text-indigo-400 shrink-0" /> Trích dẫn: {smartLinkData.citation}
+            </div>
+            <p className="text-[13px] text-slate-200 leading-relaxed font-medium pt-1">
+              {smartLinkData.explanation}
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between pt-1 text-[11px] text-slate-400 font-semibold gap-2 border-t border-indigo-500/10">
+            <span>💡 Đang hiển thị slide đối chiếu ở khung bên trái</span>
+          </div>
+        </div>
+      )}
 
       {/* Feedback Modal */}
       <FeedbackModal 
