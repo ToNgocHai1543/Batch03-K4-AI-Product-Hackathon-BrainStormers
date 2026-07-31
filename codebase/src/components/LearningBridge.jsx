@@ -375,7 +375,7 @@ export default function LearningBridge({
                     <div className="flex items-start justify-between gap-2">
                       <p className="text-[14px] font-bold text-slate-900 leading-relaxed">
                         <span className="text-emerald-700 mr-1">Câu {qIdx + 1}.</span>
-                        {q.question}
+                        {q.question ? q.question.replace(/\s*\(\s*biến\s*thể\s*\d+\s*\)/gi, '') : ''}
                       </p>
                       {showResult && (
                         <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ${
