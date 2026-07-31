@@ -10,11 +10,11 @@
 
 | Vai trò | Thành viên | Trách nhiệm chính | File chịu trách nhiệm |
 |---|---|---|---|
-| 🔍 **Evidence Lead** | Người 1 | Mining data + Khảo sát | `spec.md` §1–§2, log mining |
-| 📐 **Spec & Design Lead** | Người 2 | Thiết kế giải pháp + Viết spec | `spec.md` §3–§6, `demo-slides.pdf` |
-| 💻 **Build Lead** | Người 3 | Code prototype + Tích hợp AI | `codebase/` |
-| 🧪 **Eval & Prompt Lead** | Người 4 | Golden set + Prompt engineering | `eval/`, `spec.md` §7 |
-| 👥 **Validation & Demo Lead** | Người 5 | User test + Demo prep + Repo | `validation/`, `demo-slides.pdf`, repo structure |
+| 🔍 **Evidence Lead** | Nguyễn Đức Anh (Người 1) | Mining data + Khảo sát | `spec.md` §1–§2, log mining |
+| 📐 **Spec & Design Lead** | Hải Yến (Người 2) | Thiết kế giải pháp + Viết spec | `spec.md` §3–§6, `demo-slides.pdf` |
+| 💻 **Build Lead** | Nguyễn Hải Anh (Người 3) | Code prototype + Tích hợp AI | `codebase/` |
+| 🧪 **Eval & Prompt Lead** | Nông Ngọc Dương (Người 4) | Golden set + Prompt engineering | `eval/`, `spec.md` §7 |
+| 👥 **Validation & Demo Lead** | Tô Ngọc Hải (Người 5) | User test + Demo prep + Repo | `validation/`, `demo-slides.pdf`, repo structure |
 
 ---
 

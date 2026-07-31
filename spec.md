@@ -193,9 +193,19 @@ Phạm vi này tạo tác động rộng hơn hai ứng viên còn lại nhưng 
 - Kết quả: Round 1 pass tự động 81,8% (18/22), Round 2 pass 100% (22/22); recap có citation tồn tại tăng từ 73,3% lên 100%, bridge không trace được bằng 0. Xem `eval/results_round_1.md`, `eval/results_round_2.md` và JSON live trong `eval/results/`. Citation chính xác chờ đủ hai reviewer; chỉ số hữu ích lấy từ Validation Lead và vẫn là `pending validation` nếu chưa có feedback thật.
 
 ## §8. Phân công & kế hoạch
-- Phân công có tên: _xem phan-cong.md_
-- Willing users (≥3 tên): _TODO_
-- Multi-prototype (nếu làm): _TODO_
+- Phân công có tên:
+  - **Người 1 — Evidence Lead**: Nguyễn Đức Anh
+  - **Người 2 — Spec & Design Lead**: Hải Yến
+  - **Người 3 — Build Lead**: Nguyễn Hải Anh
+  - **Người 4 — Eval & Prompt Lead**: Nông Ngọc Dương
+  - **Người 5 — Validation & Demo Lead**: Tô Ngọc Hải
+- Willing users (khai báo ≥3 tên cụ thể cho User Testing):
+  1. **Nguyễn Đức Hưng** (Học viên khóa AI Thực Chiến K4) — Đã đồng ý tham gia User Testing 10 phút.
+  2. **Phạm Sỹ Đức** (Học viên khóa AI Thực Chiến K3) — Đã đồng ý kiểm thử trải nghiệm recap & bridge.
+  3. **Thạch Minh Quân** (Trợ giảng TA khóa AI Thực Chiến K4) — Đã đồng ý đánh giá tính hữu ích và độ tin cậy trích dẫn slide.
+  4. **Lê Hồng Đức** (Học viên khóa AI Thực Chiến K4) — Dự phòng thử nghiệm giao diện.
+  5. **Dương Quang Hưng** (Học viên khóa AI Thực Chiến K4) — Dự phòng thử nghiệm giao diện.
+- Multi-prototype (nếu làm): Không (Tập trung hoàn thiện 1 Working Prototype cho VLearn Track A)
 
 ## §9. Changelog
 | Thời điểm | Đổi gì | Vì sao |

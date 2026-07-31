@@ -22,8 +22,17 @@ export default function LearningBridge({
   const [checklistState, setChecklistState] = useState({});
   const [feedbackTarget, setFeedbackTarget] = useState(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState(null);
 
   if (!bridgeData) return null;
+
+  const handleRefreshAI = async () => {
+    if (onRefreshLLM) {
+      await onRefreshLLM();
+      setToastMessage('✨ Đã tái tạo thành công Cầu nối AI!');
+      setTimeout(() => setToastMessage(null), 3500);
+    }
+  };
 
   const handleQuizSelect = (qId, optionIdx) => {
     setQuizAnswers(prev => ({ ...prev, [qId]: optionIdx }));
@@ -102,23 +111,31 @@ export default function LearningBridge({
         <div className="grid grid-cols-2 gap-2 pt-0.5">
           <button 
             onClick={onSkipBridge}
-            className="btn btn-navy text-[14px] py-1.5 px-3 font-bold flex items-center justify-center gap-1.5 w-full shadow-2xs rounded-lg whitespace-nowrap"
-            title="Bỏ qua phần tổng quan để bắt đầu bài học"
+            className="btn btn-navy text-[14px] py-1.5 px-3 font-bold flex items-center justify-center gap-1.5 w-full shadow-2xs rounded-lg whitespace-nowrap cursor-pointer hover:bg-slate-800 transition-all"
+            title="Chuyển sang VLearn Tutor & mở Slide bài học"
           >
             <span>Học ngay</span>
             <ArrowRight size={14} className="shrink-0" />
           </button>
 
           <button 
-            onClick={onRefreshLLM} 
+            onClick={handleRefreshAI} 
             disabled={loading}
-            className="px-2.5 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/80 text-indigo-800 text-[14px] font-semibold hover:bg-indigo-100 transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 whitespace-nowrap"
+            className="px-2.5 py-1.5 rounded-lg border border-indigo-200 bg-indigo-50/80 text-indigo-800 text-[14px] font-semibold hover:bg-indigo-100 transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 whitespace-nowrap cursor-pointer"
             title="Tái tạo lại cây tri thức bằng AI"
           >
             <Sparkles size={13} className={loading ? 'animate-spin text-indigo-600 shrink-0' : 'text-indigo-600 shrink-0'} />
             <span>{loading ? 'Đang tạo...' : 'Tạo lại AI'}</span>
           </button>
         </div>
+
+        {/* 💡 TOAST NOTIFICATION FOR AI REFRESH FEEDBACK */}
+        {toastMessage && (
+          <div className="bg-emerald-50 border border-emerald-300 text-emerald-800 text-[12px] font-bold px-3 py-1.5 rounded-lg flex items-center justify-between animate-fade-in shadow-2xs">
+            <span>{toastMessage}</span>
+            <span className="text-[10px] text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded font-mono">LIVE API</span>
+          </div>
+        )}
       </div>
 
       {/* 🟢 5 TAB PILL NAVIGATION */}
