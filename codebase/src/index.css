@@ -26,7 +26,7 @@
 }
 
 html {
-  font-size: 20px; /* Tăng baseline font-size lên 20px giúp toàn bộ chữ, khung, nút to rõ vượt trội 1.25x */
+  font-size: 15px; /* Giảm baseline font-size để giao diện nhỏ lại, bớt chen chúc */
   background-color: #ffffff;
 }
 
@@ -157,14 +157,14 @@ h1, h2, h3, h4, h5 {
 .citation-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.25rem 0.65rem;
+  gap: 0.2rem;
+  padding: 0.15rem 0.4rem;
   background-color: #eff6ff;
   color: #1d4ed8;
   border: 1px solid #bfdbfe;
-  border-radius: 7px;
-  font-size: 0.88rem;
-  font-weight: 600;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 /* Animations */
