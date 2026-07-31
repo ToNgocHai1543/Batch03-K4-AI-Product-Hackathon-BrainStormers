@@ -14,6 +14,7 @@ import PdfSlideCanvas from './components/PdfSlideCanvas';
 export default function App() {
   const [activeMainTab, setActiveMainTab] = useState('study'); // 'home' | 'courses' | 'study'
   const [selectedDayIndex, setSelectedDayIndex] = useState(1); // Default to Day 02
+  const [pdfDayIndex, setPdfDayIndex] = useState(1); // Track slide day index independently
   const [pathMode, setPathMode] = useState('happy'); // 'happy' | 'lowConfidence' | 'failure' | 'boundary'
   const [showBridgeWidget, setShowBridgeWidget] = useState(true);
   const [rightPanelTab, setRightPanelTab] = useState('tutor'); // Default to 'tutor'
@@ -41,6 +42,7 @@ export default function App() {
   // Reset when day changes
   const handleSelectDay = (idx) => {
     setSelectedDayIndex(idx);
+    setPdfDayIndex(idx);
     setTargetPdfPage({ page: 1, timestamp: Date.now() });
     setCurrentSlidePage(1);
     setZoomLevel(100);
@@ -75,8 +77,8 @@ export default function App() {
       });
 
       if (targetIdx !== -1) {
-        if (targetIdx !== selectedDayIndex) {
-          setSelectedDayIndex(targetIdx);
+        if (targetIdx !== pdfDayIndex) {
+          setPdfDayIndex(targetIdx);
           setExpandedDays(prev => ({ ...prev, [targetIdx]: true }));
         }
       }
@@ -231,7 +233,7 @@ export default function App() {
                 </div>
                 <div>
                   <h1 className="text-sm font-bold text-slate-900 leading-tight">
-                    {currentDay.slideFile}
+                    {COURSE_DAYS[pdfDayIndex].slideFile}
                   </h1>
                   <p className="text-xs font-semibold text-slate-400 uppercase">COMP2010 • VINUNIVERSITY</p>
                 </div>
@@ -241,7 +243,7 @@ export default function App() {
             {/* Right Utilities */}
             <div className="flex items-center gap-3">
               <a 
-                href={currentDay.pdfPath} 
+                href={COURSE_DAYS[pdfDayIndex].pdfPath} 
                 target="_blank" 
                 rel="noreferrer"
                 className="px-3 py-1 rounded-md border border-indigo-200 bg-indigo-50 text-indigo-700 text-xs font-semibold flex items-center gap-1 hover:bg-indigo-100"
@@ -452,7 +454,7 @@ export default function App() {
                 <div className="h-4 w-px bg-slate-200 mx-0.5" />
 
                 <span className="px-2.5 py-0.5 rounded-full border border-slate-200 bg-slate-50 text-slate-700 font-medium text-xs">
-                  Trang {currentSlidePage} / {currentDay.pageCount}
+                  Trang {currentSlidePage} / {COURSE_DAYS[pdfDayIndex].pageCount}
                 </span>
 
                 {/* Working Zoom Pill Badge */}
@@ -498,7 +500,7 @@ export default function App() {
                   <Minus size={14} />
                 </button>
                 <a 
-                  href={currentDay.pdfPath} 
+                  href={COURSE_DAYS[pdfDayIndex].pdfPath} 
                   download 
                   className="w-7 h-7 rounded-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 text-slate-600" 
                   title="Tải xuống PDF"
@@ -518,7 +520,7 @@ export default function App() {
             {/* PURE WHITE BACKGROUND SLIDE CANVAS (CONTINUOUS VERTICAL SCROLL) */}
             <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-2xs relative overflow-hidden flex flex-col p-0" style={{ backgroundColor: '#ffffff' }}>
               <PdfSlideCanvas 
-                pdfPath={currentDay.pdfPath}
+                pdfPath={COURSE_DAYS[pdfDayIndex].pdfPath}
                 targetPageNum={targetPdfPage}
                 zoomLevel={zoomLevel}
               />
