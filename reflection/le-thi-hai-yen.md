@@ -1,4 +1,4 @@
-# Reflection — Hải Yến (Spec & Design Lead)
+# Reflection — Lê Thị Hải Yến (Spec & Design Lead)
 
 ## Vai trò trong nhóm
 Người 2 — Spec & Design Lead: Phụ trách thiết kế giải pháp sản phẩm, viết tài liệu kỹ thuật AI Spec 9 mục, và ma trận HAX/PAIR Framework.
