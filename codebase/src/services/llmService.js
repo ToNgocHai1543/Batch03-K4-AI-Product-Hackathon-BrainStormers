@@ -490,6 +490,53 @@ const callGeminiAPI = async (apiKey, promptText, maxOutputTokens = 2048) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+//  OPENAI API HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+const getOpenAiApiKey = () =>
+  import.meta.env.VITE_OPENAI_API_KEY ||
+  import.meta.env.OPENAI_API_KEY ||
+  '';
+
+const getOpenAiModel = () =>
+  import.meta.env.VITE_OPENAI_MODEL || 'gpt-4o-mini';
+
+const callOpenAiAPI = async (apiKey, promptText, maxOutputTokens = 2048) => {
+  const model = getOpenAiModel();
+  try {
+    const response = await fetch(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: model,
+          messages: [{ role: 'user', content: promptText }],
+          temperature: 0.2,
+          max_tokens: maxOutputTokens,
+          response_format: { type: 'json_object' }
+        })
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      const rawText = data.choices?.[0]?.message?.content || '';
+      if (rawText) {
+        return { rawText, usedModel: model };
+      }
+    } else {
+      console.warn('[OpenAI API] Failed response status:', response.status);
+    }
+  } catch (err) {
+    console.warn('[OpenAI API] Failed:', err.message);
+  }
+  return null;
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 //  MAIN LLM SERVICE
 // ─────────────────────────────────────────────────────────────────────────────
 export const llmService = {
@@ -590,23 +637,56 @@ export const llmService = {
     }
 
     const apiKey = getApiKey();
+    let validated = null;
+    let usedModel = '';
 
-    // Step 3: Gemini API (real key only)
+    // Step 3a: Try Gemini API (real key only)
     if (apiKey && apiKey.length > 10) {
       try {
         const promptText = buildTutorPrompt(day, activeQuestion, originalText, hasCorrection);
         const apiResult = await callGeminiAPI(apiKey, promptText, 2048);
         if (apiResult) {
           const parsed = safeParseJSON(apiResult.rawText);
-          const validated = validateTutorResponse(parsed);
+          validated = validateTutorResponse(parsed);
           if (validated) {
-            logger.logLLMCall({ prompt: `Q&A: ${activeQuestion}`, model: apiResult.usedModel, isRealAPI: true, agent: 'TutorAgent', pathMode: 'tutor' }, validated, Date.now() - startTime);
-            return { ...validated, typoCorrection };
+            usedModel = apiResult.usedModel;
           }
         }
       } catch (err) {
         console.warn('[Tutor] Gemini API failed:', err.message);
       }
+    }
+
+    // Step 3b: Fallback to OpenAI API if Gemini failed or was skipped
+    if (!validated) {
+      const openAiKey = getOpenAiApiKey();
+      if (openAiKey && openAiKey.length > 10) {
+        try {
+          const promptText = buildTutorPrompt(day, activeQuestion, originalText, hasCorrection);
+          const apiResult = await callOpenAiAPI(openAiKey, promptText, 2048);
+          if (apiResult) {
+            const parsed = safeParseJSON(apiResult.rawText);
+            validated = validateTutorResponse(parsed);
+            if (validated) {
+              usedModel = apiResult.usedModel;
+            }
+          }
+        } catch (err) {
+          console.warn('[Tutor] OpenAI API failed:', err.message);
+        }
+      }
+    }
+
+    // Process Validated API Result (from Gemini or OpenAI)
+    if (validated) {
+      logger.logLLMCall({ 
+        prompt: `Q&A: ${activeQuestion}`, 
+        model: usedModel, 
+        isRealAPI: true, 
+        agent: 'TutorAgent', 
+        pathMode: 'tutor' 
+      }, validated, Date.now() - startTime);
+      return { ...validated, typoCorrection };
     }
 
     // Step 4: Knowledge Base intent match
