@@ -54,18 +54,19 @@ Loại: [x] Tính năng mới
   2. Không tạo hệ thống chấm điểm chính thức
   3. Không thay thế vai trò giảng viên
   4. Không xây chatbot Q&A tổng quát
-- Mức prototype nhắm tới: [ ] Sketch [x] Mock [ ] Working — phần mock: UI hiển thị, knowledge map; phần thật: LLM call sinh recap/bridge
+  - Ranh giới với source hiện tại: `VLearnTutor.jsx` được xem là màn hình nền/mô phỏng tính năng VLearn sẵn có, **không thuộc lát cắt được đánh giá**; đường demo chính chỉ là Learning Bridge. Quiz nhanh chỉ hỗ trợ tự ôn, không lưu điểm và không được dùng để đánh giá năng lực chính thức.
+- Mức prototype hiện tại: [ ] Sketch [x] Mock [ ] Working — UI React, knowledge map, citation navigation, feedback và trace đã có component chạy; happy path có mã gọi Gemini thật. Low-confidence/failure/out-of-scope dùng `PREBAKED_EXPERIENCE_PATHS`, nên là mock có chủ đích. Chưa công nhận Working end-to-end trên artifact repo vì đang thiếu `codebase/src/data/courseData.js`, là dependency được `App.jsx` và `llmService.js` import.
 - Automation: [x] augment [ ] conditional [ ] automate — AI đề xuất recap/bridge nhưng học viên quyết định đọc, kiểm tra nguồn hoặc bỏ qua. Nếu nội dung sai, khoảng 1.000 học viên có thể ôn sai nền tảng cho buổi sau và TA phải sửa lại; vì chi phí lỗi trung bình–cao, mỗi ý phải có citation, trạng thái thiếu căn cứ phải thu hẹp output và kết quả không được dùng để chấm điểm chính thức.
 - §4b. Nguyên tắc đã áp dụng (≥4):
 
 | Nguyên tắc | Áp cụ thể vào đâu trong prototype |
 |---|---|
-| G2 — Làm rõ nó làm tốt đến đâu | Header ghi “Tạo từ tài liệu Day 01–02”; mỗi ý recap/bridge kèm `[slide/trang/đoạn]` để học viên biết phạm vi và kiểm lại |
-| G10 — Thu hẹp phạm vi khi nghi ngờ | Transcript/slide thiếu hoặc không tìm thấy overlap → giảm số ý và hiện “Chưa đủ dữ liệu để kết luận” thay vì đoán |
-| G8 — Gạt bỏ dễ dàng | Nút “Bỏ qua recap, vào bài học” luôn hiện; lỗi AI không chặn flow vào Day 02 |
-| G9 — Sửa dễ dàng | Sau khi chọn 👎, học viên chọn ý sai/nhập sửa ngắn ngay tại output thay vì phải mở luồng hỗ trợ khác |
-| G11 — Giải thích vì sao | Mỗi cạnh bridge có câu “Day 01 [nguồn A] là nền tảng cho Day 02 [nguồn B] vì…” và mở được hai nguồn |
-| G15 — Mời feedback chi tiết | 👍/👎 sau recap; khi chọn 👎 hệ thống hỏi “Ý nào sai hoặc chưa rõ?” và ghi nhận đúng mục được chọn |
+| G2 — Làm rõ nó làm tốt đến đâu | `LearningBridge.jsx`: badge `Grounded G2`, số ý có trích dẫn, citation cạnh từng recap/bridge và badge `Live API` khi có lời gọi thật |
+| G10 — Thu hẹp phạm vi khi nghi ngờ | `App.jsx` + `llmService.js`: demo Low-Confidence/Failure và honest fallback không trả lời khi không tìm được nguồn; các path lỗi hiện dùng dữ liệu prebaked để chứng minh hành vi |
+| G8 — Gạt bỏ dễ dàng | `LearningBridge.jsx`: nút “Học ngay” gọi `onSkipBridge`; AI Bridge không chặn học viên vào bài |
+| G9 — Sửa dễ dàng | `LearningBridge.jsx` mở `FeedbackModal.jsx` ngay tại recap bị chọn; học viên chọn loại lỗi và nhập mô tả. Bản hiện tại ghi nhận yêu cầu sửa, chưa sửa trực tiếp nội dung trên màn hình |
+| G11 — Giải thích vì sao | `LearningBridge.jsx`: mỗi `bridgeLink` hiển thị source concept, target concept, hai citation và `explanation`; knowledge map dùng cùng dữ liệu |
+| G15 — Mời feedback chi tiết | `FeedbackModal.jsx` + `logger.js`: 👎 → chọn sai citation/nhầm khái niệm/hallucination/khác → nhập chi tiết → lưu feedback kèm section và citation ID |
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản (≥8)
 
@@ -76,25 +77,38 @@ Loại: [x] Tính năng mới
 | ③ Ngoài phạm vi/thẩm quyền | Người dùng đòi giải bài, chấm điểm hoặc hỏi ngoài tài liệu khóa học | Từ chối phần ngoài phạm vi, nhắc lại feature làm được gì và cho phép vào bài |
 | ④ Đặc thù domain | Sai thuật ngữ AI làm học viên hình thành nền tảng sai | Giữ nguyên thuật ngữ/định nghĩa nguồn; tách các khái niệm gần nhau và cite riêng |
 
-| # | Tình huống cụ thể | Lớp | Hành vi mong muốn | Nguyên tắc |
-|---|---|---|---|---|
-| 1 | Hai buổi gần như không liên quan nhưng mô hình bịa một bridge nghe hợp lý | ① | Không hiện cạnh bridge; ghi “Chưa tìm thấy liên kết đủ căn cứ giữa hai buổi” và cho vào bài | G10 |
-| 2 | Nội dung recap đúng nhưng citation trỏ nhầm trang/đoạn | ① | Đánh dấu ý đó là không đạt, không hiển thị như kết quả tin cậy; cho mở đúng nguồn hoặc gửi 👎 tại ý | G2, G9 |
-| 3 | Transcript Day 01 bị thiếu nửa cuối hoặc quá ngắn | ② | Hiện banner “Dữ liệu Day 01 chưa đầy đủ”; chỉ tóm tắt phần có nguồn và đưa link slide gốc | G10 |
-| 4 | Một slide chỉ có tiêu đề, không đủ dữ kiện để xác định quan hệ với Day 02 | ② | Bỏ bridge đó và ghi “Chưa đủ thông tin để xác định”; không suy diễn từ tiêu đề | G10 |
-| 5 | Học viên hỏi một kiến thức không xuất hiện trong tài liệu Day 01–02 | ③ | “Nội dung này nằm ngoài tài liệu Day 01–02 nên mình chưa thể kết luận”; cho mở bài hoặc tài liệu gốc | G2, G10 |
-| 6 | Học viên yêu cầu làm hộ bài tập hoặc chấm điểm chính thức | ③ | Từ chối làm/chấm hộ; gợi ý xem recap, mở bài tập và tự thử bước đầu | G8 |
-| 7 | Mô hình nhầm “attention mechanism” với “attention” theo nghĩa chú ý thông thường | ④ | Giữ thuật ngữ đúng như nguồn, kèm định nghĩa và citation; không dùng bản diễn giải gây đổi nghĩa | G2, G11 |
-| 8 | Recap gộp Chain-of-Thought và Prompt Engineering thành một khái niệm | ④ | Tách thành hai ý, mỗi ý có nguồn riêng; nếu nguồn không phân biệt rõ thì báo mơ hồ | G10, G11 |
-| 9 | Học viên bỏ hai buổi liên tiếp rồi mở Day N+2 | Hiếm | Không nhồi toàn bộ lịch sử vào một recap; hiển thị hai recap rút gọn theo thứ tự và bridge tích lũy, có nút bỏ qua | G2, G8 |
+| # | Tình huống cụ thể | Lớp | Hành vi mong muốn | Trạng thái trong source hiện tại | Nguyên tắc |
+|---|---|---|---|---|---|
+| 1 | Hai buổi gần như không liên quan nhưng mô hình bịa một bridge nghe hợp lý | ① | Không hiện cạnh bridge; ghi “Chưa tìm thấy liên kết đủ căn cứ giữa hai buổi” và cho vào bài | **Mock:** Failure path trả `bridgeLinks=[]`; UI hiện trạng thái không có liên kết | G10 |
+| 2 | Nội dung recap đúng nhưng citation trỏ nhầm trang/đoạn | ① | Cho mở nguồn và gửi 👎 ngay tại ý; không coi mã citation tồn tại là bằng chứng citation đúng nghĩa | **Một phần:** recap citation bấm được và feedback ghi đúng citation ID; bridge citation chưa truyền day code nên có thể mở sai buổi | G2, G9 |
+| 3 | Transcript Day 01 bị thiếu nửa cuối hoặc quá ngắn | ② | Hiện cảnh báo dữ liệu thiếu; chỉ giữ phần có căn cứ và cho phép bỏ qua | **Mock:** Low-Confidence path được chọn từ Demo Controller | G10 |
+| 4 | Một slide chỉ có tiêu đề, không đủ dữ kiện để xác định quan hệ với Day 02 | ② | Bỏ bridge không đủ căn cứ; không suy diễn từ tiêu đề | **Mock/được eval:** UI có failure state; golden set kiểm fallback nhưng frontend chưa tự gate theo chất lượng nguồn | G10 |
+| 5 | Học viên hỏi một kiến thức không xuất hiện trong tài liệu Day 01–02 | ③ | Nêu rõ ngoài phạm vi và đưa người dùng về bài học | **Mock:** Out-of-Scope path trong Demo Controller; Tutor có honest fallback riêng | G2, G10 |
+| 6 | Học viên yêu cầu làm hộ bài tập hoặc chấm điểm chính thức | ③ | Từ chối làm/chấm hộ; gợi ý xem recap và tự thử | **Chưa chứng minh trong Learning Bridge:** non-goal đã chốt; cần dùng Out-of-Scope demo hoặc bổ sung case UI | G8 |
+| 7 | Mô hình nhầm “attention mechanism” với “attention” theo nghĩa chú ý thông thường | ④ | Giữ thuật ngữ đúng như nguồn, kèm định nghĩa và citation | **Một phần:** feedback có loại “Nhầm lẫn khái niệm kỹ thuật”; eval có `hard_domain_01`, nhưng frontend không có semantic gate tự động | G2, G11 |
+| 8 | Recap gộp Chain-of-Thought và Prompt Engineering thành một khái niệm | ④ | Tách thành hai ý có nguồn riêng; khi mơ hồ thì không gộp | **Được eval, chưa có UI riêng:** `hard_domain_02` kiểm output; feedback cho phép báo nhầm khái niệm | G10, G11 |
+| 9 | Học viên bỏ hai buổi liên tiếp rồi mở Day N+2 | Hiếm | Hiển thị recap rút gọn theo thứ tự và bridge tích lũy, có nút bỏ qua | **Chưa implement:** source hiện chỉ lấy `selectedDayIndex - 1` làm buổi trước | G2, G8 |
 
 ## §6. Bốn đường đi của trải nghiệm
-- **Happy path:** Học viên mở Day N+1 → header cho biết hệ thống dùng tài liệu Day N–N+1 → xem recap Day N gồm 5–7 ý có citation → xem 2–4 bridge, mỗi bridge có nguồn ở cả hai buổi → xem checklist → chọn “Bắt đầu bài mới” trong ≤3 phút.
-- **Low-confidence (②):** Hệ thống phát hiện transcript/slide thiếu → banner nêu rõ buổi nào thiếu dữ liệu → chỉ hiện các ý có căn cứ với nhãn “Bản rút gọn” → học viên chọn “Xem tài liệu gốc” hoặc “Bỏ qua, vào bài”.
-- **Failure/không căn cứ (①):** Không tìm thấy bridge đủ căn cứ → không dựng knowledge map giả → hiện “Chưa tìm thấy liên kết đủ căn cứ giữa hai buổi” → đưa link hai nguồn và nút vào bài mới.
-- **Correction:** Học viên chọn 👎 tại một ý → chọn lý do “Sai nội dung / Sai nguồn / Khó hiểu” và có thể nhập sửa ngắn → hệ thống xác nhận đã ghi nhận, giữ nút mở nguồn và không tự tuyên bố rằng nội dung đã được sửa đúng.
-- **Khi bị đòi ngoài phạm vi (③):** Hệ thống nêu “Mình chỉ tạo recap và cầu nối từ tài liệu Day N–N+1” → từ chối làm hộ/chấm điểm/trả lời ngoài nguồn → đưa học viên về recap hoặc bài học.
-- **Case đặc thù domain (④):** Thuật ngữ AI được giữ đúng như tài liệu; các khái niệm gần nhau nằm ở các ý riêng với citation riêng; khi nguồn mâu thuẫn, hệ thống nêu mâu thuẫn thay vì tự chọn một định nghĩa.
+- **Happy path — AI thật khi có API key:** Học viên mở Day N+1 → chọn tab Bridge Agent → xem recap có citation → xem bridge gồm hai nguồn và giải thích → mở knowledge map/checklist/quiz → chọn “Học ngay”. `llmService.generateLearningBridge()` chỉ gọi Gemini ở path này.
+- **Low-confidence (②) — mock có chủ đích:** Demo Controller chọn Low-Confidence → frontend lấy dữ liệu prebaked → hiện cảnh báo/nội dung thu hẹp → học viên kiểm tra nguồn hoặc “Học ngay”. Không trình bày đây là output API live.
+- **Failure/không căn cứ (①) — mock có chủ đích:** Demo Controller chọn Failure → trả danh sách bridge rỗng → UI không dựng liên kết giả và vẫn cho học viên vào bài.
+- **Correction — component thật:** Tại một ý recap, học viên chọn 👎 → modal hiển thị đúng nội dung đang phản hồi → chọn “Trích dẫn sai / Nhầm khái niệm / Hallucination / Khác” → nhập mô tả → lưu log kèm citation → nhận xác nhận. Đây là đường correction thứ tư theo rubric; Out-of-Scope là case bổ sung, không thay thế correction.
+- **Khi bị đòi ngoài phạm vi (③) — mock bổ sung:** Demo Controller chọn Out-of-Scope/Boundary → hiển thị hành vi từ chối theo dữ liệu prebaked → cho học viên quay lại bài.
+- **Case đặc thù domain (④):** Frontend cho báo lỗi “Nhầm lẫn khái niệm kỹ thuật”; semantic correctness được đo bằng human review trong `eval/`, chưa có gate tự động ở frontend.
+
+### §6b. Kết quả review khớp spec–source của Spec & Design Lead
+
+| Mức | Phát hiện | Quyết định thiết kế / tiêu chí bàn giao |
+|---|---|---|
+| **Blocker** | Repo thiếu `codebase/src/data/courseData.js` dù `App.jsx` và `llmService.js` import file này | Giữ mức **Mock** cho đến khi file được commit và `npm run build` thành công từ clean checkout |
+| **Blocker** | `LearningBridge.jsx` gọi `extractSlidePage(...)` tại tab Bridge nhưng chỉ khai báo `extractSlidePageAndDay(...)` | Sửa helper/call site và kiểm tra bấm mở cả citation nguồn lẫn đích trước khi demo |
+| **Cao** | Khi Gemini lỗi, service âm thầm trả `PREBAKED_EXPERIENCE_PATHS.happy` | Fallback phải có nhãn “Demo fallback / Không phải Live API”, warning và hành động thử lại/bỏ qua; không để người dùng nhầm mock với kết quả thật |
+| **Cao** | Citation bridge gọi `onJumpToSlide(srcPage/targetPage)` nhưng không truyền day code | Citation nguồn phải mở Day N; citation đích phải mở Day N+1, tương tự cách recap truyền cả trang và ngày |
+| **Vừa** | Demo Controller có Out-of-Scope thay vì nút Correction | Demo correction bằng nút 👎 trên recap và nói rõ đây là path thứ tư; Out-of-Scope là case bổ sung |
+| **Vừa** | `VLearnTutor.jsx` là chatbot Q&A rộng hơn lát cắt | Không đưa Tutor vào claim/lượt demo của Learning Bridge; coi đây là UI nền của VLearn để không vi phạm non-goal |
+| **Vừa** | Ba path lỗi luôn prebaked (`pathMode !== 'happy'`) | Badge/slide demo phải công khai phần mock; chỉ happy path được dùng làm bằng chứng AI call thật |
+| **Backlog** | Chưa hỗ trợ người học bỏ hai buổi liên tiếp | Không claim case hiếm #9 đã implement; giữ làm ưu tiên nếu có thêm một tuần |
 
 ## §7. Kiểm thử
 - Chiều chất lượng và cách đo chi tiết: xem `eval/README.md`. Validator tự động kiểm schema, số lượng 5–7 recap/2–4 bridge, giới hạn 300 từ, citation tồn tại đúng phía và fallback. Hai reviewer độc lập kiểm citation thực sự hỗ trợ claim, logic bridge, nghĩa thuật ngữ domain và độ hữu ích.
@@ -110,6 +124,8 @@ Loại: [x] Tính năng mới
 ## §9. Changelog
 | Thời điểm | Đổi gì | Vì sao |
 |---|---|---|
+| 31/07/2026 — sau khi pull prototype mới | Audit khớp spec–source: cập nhật mức thật/mock, vị trí 6 nguyên tắc, trạng thái 9 kịch bản và 4 đường đi; tách Tutor khỏi lát cắt | Source mới đã có UI/feedback/trace nhưng ba error path còn prebaked; cần mô tả trung thực theo artifact |
+| 31/07/2026 — sau khi pull prototype mới | Ghi 2 blocker và các design gap: thiếu `courseData.js`, helper citation bridge sai tên, fallback API chưa minh bạch, citation bridge thiếu day code | Ngăn claim Working khi clean checkout chưa chạy và tránh người dùng nhầm output mock/API hoặc mở sai nguồn |
 | 31/07/2026 — trước CP3 | Mở rộng evidence từ n=20 lên n=27; cập nhật pain (85%), tần suất thường xuyên (74%), mức hữu ích (67%), mức sẵn sàng dùng (96%) và thêm 2 quote | Phản ánh 7 phản hồi mới; PP1 “không thấy liên hệ giữa hai buổi” trở thành pain áp đảo với 11/27 (41%) |
 | 31/07/2026 — trước CP3 | Cập nhật evidence n=20, 6 quote, tần suất (70% gặp thường xuyên), mức hữu ích (70%), mức sẵn sàng dùng (95%) và bảng impact | Thay các ước tính/TODO bằng kết quả khảo sát do Người 1 bàn giao; không công khai tên/MSSV trong spec |
 | 31/07/2026 — trước CP3 | Hoàn thiện benchmark NotebookLM, Khanmigo và ChatGPT Study Mode; chốt khác biệt “đúng thời điểm + đúng cặp nguồn + output ≤3 phút” | Tránh biến lát cắt thành chatbot học tập tổng quát và làm rõ quyết định thiết kế từ sản phẩm tương tự |
