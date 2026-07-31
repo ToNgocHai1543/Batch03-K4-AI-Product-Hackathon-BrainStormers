@@ -4,33 +4,50 @@ Loại: [x] Tính năng mới
 
 ## §1. User & Job
 
-- **Job executor + workflow:** Học viên khóa AI Thực Chiến, chủ yếu thuộc K3 và K4, bắt đầu một buổi học mới trên VLearn.
-  - **Workflow:** Kết thúc buổi N → Bắt đầu buổi N+1 → Cố nhớ lại nội dung buổi trước → Mở lại slide, ghi chú, video hoặc hỏi bạn bè/trợ giảng → Tiếp tục học sau khi lấy lại được ngữ cảnh, hoặc học trong trạng thái chưa hiểu rõ mối liên hệ giữa các buổi.
+- **Job executor + workflow:** Học viên khóa AI Thực Chiến, chủ yếu thuộc K3 và K4, khi bắt đầu một buổi học mới trên VLearn.
 
-- **Core JTBD** *(không tên sản phẩm/AI trong câu):* Khi bắt đầu một buổi học mới, học viên muốn nhanh chóng nhớ lại kiến thức quan trọng của buổi trước và hiểu nội dung đó liên quan như thế nào đến bài học hôm nay, để tiếp thu bài mới hiệu quả mà không phải mất nhiều thời gian tìm lại tài liệu.
+  - **Workflow:** Kết thúc buổi N → Bắt đầu buổi N+1 → Cố nhớ lại kiến thức buổi trước → Mở lại slide, video, ghi chú, đoạn chat hoặc hỏi bạn bè/trợ giảng → Lấy lại ngữ cảnh để tiếp tục học, hoặc học bài mới khi chưa hiểu rõ mối liên hệ giữa các buổi.
 
-- **Problem statement** *(không dùng chữ AI):* Khi bắt đầu buổi học mới, nhiều học viên không nhớ rõ nội dung buổi trước hoặc không nhận ra mối liên hệ giữa các buổi học. Họ phải mở lại slide, ghi chú, video hoặc hỏi người khác để lấy lại ngữ cảnh, làm gián đoạn mạch tư duy, tốn thời gian và giảm hiệu quả tiếp thu kiến thức mới.
+- **Core JTBD** *(không có tên sản phẩm hoặc AI trong câu):* Khi bắt đầu một buổi học mới, học viên muốn nhanh chóng nhớ lại những kiến thức quan trọng của buổi trước và hiểu chúng liên quan như thế nào đến nội dung hôm nay, để tiếp thu bài mới hiệu quả mà không phải mất nhiều thời gian tìm lại tài liệu.
 
-- **Evidence** *(chuẩn B — khảo sát người dùng; log đầy đủ tại `evidence/survey_log.md`):*
-  - Khảo sát **20 học viên ngoài nhóm**, gồm **14 học viên K4, 5 học viên K3 và 1 học viên khóa AI khác**.
-  - **17/20 học viên (85%)** không nhớ rõ toàn bộ nội dung buổi trước:
-    - 9 người chỉ nhớ một phần.
-    - 6 người phải xem lại mới nhớ.
+- **Problem statement** *(không dùng chữ AI):* Khi bắt đầu buổi học mới, nhiều học viên không nhớ rõ nội dung buổi trước, không biết nên ôn lại phần nào hoặc không nhận ra mối liên hệ giữa các buổi học. Họ phải mở lại slide, video, ghi chú, đoạn chat hoặc hỏi người khác để lấy lại ngữ cảnh, làm gián đoạn mạch tư duy, tốn thời gian và giảm hiệu quả tiếp thu kiến thức mới.
+
+- **Evidence** *(chuẩn A — khảo sát người dùng; log đầy đủ tại `evidence/survey_log.md`):*
+  - Khảo sát ghi nhận tổng cộng **27 phản hồi**, gồm:
+    - **20 học viên K4**.
+    - **5 học viên K3**.
+    - **1 người thuộc khóa AI khác**.
+    - **1 người chọn nhóm “Khác”**.
+  - **23/27 người (85,2%)** không nhớ rõ toàn bộ nội dung buổi trước:
+    - 14 người chỉ nhớ một phần.
+    - 7 người phải xem lại tài liệu mới nhớ.
     - 2 người gần như quên hoàn toàn.
-  - **10/20 học viên (50%)** mất từ **10 phút trở lên** để lấy lại mạch kiến thức:
-    - 4 người mất 10–20 phút.
+  - Chỉ **4/27 người (14,8%)** cho biết họ nhớ khá rõ nội dung buổi trước.
+  - **14/27 người (51,9%)** mất từ **10 phút trở lên** để lấy lại mạch kiến thức:
+    - 8 người mất từ 10–20 phút.
     - 6 người mất trên 20 phút.
-  - **18/20 học viên (90%)** xác nhận có ít nhất một khó khăn cụ thể khi chuyển sang buổi học mới; chỉ 2 người chọn “Không gặp khó khăn”.
-  - Những khó khăn xuất hiện nhiều nhất:
-    - **6/20** không biết nội dung hôm nay liên quan gì đến buổi trước.
-    - **6/20** không biết nên ôn phần nào.
-    - **5/20** không nhớ buổi trước đã học gì.
-  - **14/20 học viên (70%)** gặp tình trạng này từ khoảng một nửa số buổi trở lên:
-    - 9 người gặp gần như mọi buổi.
-    - 5 người gặp khoảng một nửa số buổi.
-  - **14/20 học viên (70%)** đánh giá phần tóm tắt và kết nối kiến thức giữa các buổi là “Hữu ích” hoặc “Rất hữu ích”.
-  - **19/20 học viên (95%)** cho biết chắc chắn hoặc có thể sử dụng nếu tính năng được tích hợp vào VLearn.
-  - **Mining chatlog:** _TODO — bổ sung số hội thoại liên quan đến ôn lại buổi cũ, phương pháp mining và phân tích `day_code` cross-day._
+  - Các khoảng thời gian còn lại:
+    - 8 người mất từ 3–10 phút.
+    - 5 người mất dưới 3 phút.
+  - **24/27 người (88,9%)** xác nhận có ít nhất một khó khăn cụ thể khi bắt đầu buổi học mới; chỉ 3 người chọn “Không gặp khó khăn”.
+  - Những khó khăn được ghi nhận nhiều nhất:
+    - **11/27 người (40,7%)** không biết nội dung hôm nay liên quan như thế nào đến buổi trước.
+    - **6/27 người (22,2%)** không biết nên ôn lại phần nào.
+    - **6/27 người (22,2%)** không nhớ buổi trước đã học gì.
+    - **1/27 người (3,7%)** khó tìm lại đúng tài liệu.
+  - **20/27 người (74,1%)** gặp tình trạng này từ khoảng một nửa số buổi trở lên:
+    - 11 người gặp gần như mọi buổi học.
+    - 9 người gặp khoảng một nửa số buổi.
+  - Các mức tần suất còn lại:
+    - 5 người gặp thỉnh thoảng.
+    - 2 người gặp hiếm khi.
+  - **18/27 người (66,7%)** đánh giá tính năng tóm tắt và kết nối kiến thức giữa các buổi là **“Hữu ích” hoặc “Rất hữu ích”**:
+    - 9 người đánh giá “Hữu ích”.
+    - 9 người đánh giá “Rất hữu ích”.
+  - **26/27 người (96,3%)** cho biết chắc chắn hoặc có thể sử dụng nếu tính năng được tích hợp vào VLearn:
+    - 12 người chọn “Chắc chắn có”.
+    - 14 người chọn “Có thể”.
+    - 1 người chọn “Chưa chắc”.
 
 ### Ví dụ nguyên văn từ khảo sát
 
@@ -48,36 +65,52 @@ Loại: [x] Tính năng mới
 
 > “Khi bắt đầu một buổi học mới tôi luôn mơ hồ về việc hôm nay giảng viên đang giảng dạy phần nào và có nhiều buổi gần như tôi không biết giảng viên đang giảng về thứ gì liên quan tới chương trình.”
 
-## §2. Impact & quyết định chọn
+> “Không nhớ buổi trước học gì và mất thời gian tìm tài liệu, ghi chú, hỏi bạn bè. Nếu như quá lười hoặc bận sau một vài buổi học sẽ ko có kiến thức gì đọng lại và mất thời gian để xem và tìm lại những gì đã học.”
+
+> “Khi bắt đầu buổi hc ms tôi thường ko bt bài tới sẽ làm j và liên quan j dênd buổi trc.”
+
+> “Slide quá nhiều mà không biết tóm tắt là gì nên, không có keyword nên rất khó để hiểu.”
+
+---
+
 ## §2. Impact & quyết định chọn
 
 ### Bảng impact các ứng viên
 
 | Ứng viên | Quy mô ảnh hưởng | Tần suất xảy ra | Chi phí/tác động mỗi lần | Khả thi trong hackathon | Quyết định |
 |---|---:|---|---|---|---|
-| **Học viên khó nhớ và kết nối kiến thức giữa các buổi học** | Khoảng **1.000 học viên K3–K4**; khảo sát hiện tại `n = 20` cho thấy **18/20 (90%)** xác nhận có khó khăn cụ thể | Mỗi khi bắt đầu buổi học mới; **14/20 (70%)** gặp từ khoảng một nửa số buổi trở lên | **10/20 (50%)** mất từ 10 phút trở lên để lấy lại mạch kiến thức; phải mở lại slide, video, ghi chú hoặc hỏi người khác; làm gián đoạn tư duy | **Cao** — đã có transcript, slide và chatlog; phạm vi MVP có thể giới hạn ở recap và bridge giữa hai buổi liên tiếp | ✅ **CHỌN** |
-| **AI Tutor trả lời nhưng không trích dẫn nguồn** | Khoảng **369 người dùng** trong tập chatlog được cung cấp | Mỗi lần người dùng đặt câu hỏi cần kiểm chứng kiến thức | Người học khó kiểm tra câu trả lời, giảm niềm tin và có nguy cơ tiếp nhận thông tin sai | **Cao** — có thể bổ sung citation từ transcript/slide | ❌ **LOẠI** |
-| **Câu hỏi lặp lại làm mất thời gian của trợ giảng** | Ước tính khoảng **50 TA** | Có thể xảy ra hằng ngày, đặc biệt trước hoặc trong buổi học | Ước tính mất **15–30 phút/TA/ngày** để trả lời các câu hỏi lặp như “buổi trước học gì” hoặc “cần ôn phần nào” | **Trung bình** — cần dữ liệu hội thoại của TA và quy trình vận hành để xác minh đầy đủ | ❌ **LOẠI** |
+| **Học viên khó lấy lại mạch kiến thức và kết nối nội dung giữa các buổi học** | **24/27 người (88,9%)** xác nhận gặp ít nhất một khó khăn cụ thể; **23/27 (85,2%)** không nhớ rõ toàn bộ nội dung buổi trước | **20/27 (74,1%)** gặp tình trạng từ khoảng một nửa số buổi trở lên | **14/27 (51,9%)** mất từ 10 phút trở lên; phải tìm lại slide, video, ghi chú, đoạn chat hoặc hỏi người khác; làm gián đoạn mạch tư duy | **Cao** — đã có transcript và slide để tạo recap, bridge và trích dẫn nguồn; phạm vi MVP có thể giới hạn ở hai buổi liên tiếp | ✅ **CHỌN** |
+| **Học viên không biết nên ôn lại phần nào trước buổi học mới** | **6/27 người (22,2%)** xác nhận đây là khó khăn làm họ mất nhiều thời gian nhất | Xuất hiện khi bắt đầu buổi học mới hoặc khi chuẩn bị cho bài tiếp theo | Phải tự lướt lại nhiều slide, video và ghi chú; có thể ôn sai trọng tâm hoặc bỏ sót kiến thức nền | **Cao** — có thể tạo checklist kiến thức cần ôn từ tài liệu của hai buổi | ❌ **LOẠI** |
+| **Học viên không nhớ buổi trước đã học gì** | **6/27 người (22,2%)** chọn đây là khó khăn lớn nhất; tổng cộng **23/27 (85,2%)** không nhớ rõ toàn bộ nội dung | Xuất hiện khi chuyển sang buổi học tiếp theo | Phải mở lại slide, video, ghi chú hoặc hỏi bạn bè; các phản hồi thực tế ghi nhận thời gian tìm lại từ 15 đến trên 30 phút | **Cao** — có thể tạo bản recap từ transcript và slide | ❌ **LOẠI** |
 
 ### Ứng viên đã loại và lý do
 
-- **AI Tutor trả lời nhưng không trích dẫn nguồn — LOẠI:** Ứng viên này có quy mô khoảng **369 người dùng** và khả thi về kỹ thuật, nhưng nhóm hiện chưa có số liệu trực tiếp cho biết bao nhiêu câu trả lời thiếu citation, bao nhiêu người mất niềm tin hoặc mức độ ảnh hưởng thực tế. Trong khi đó, pain về việc nhớ và kết nối kiến thức đã được xác nhận trực tiếp bởi **18/20 học viên (90%)**. Citation được giữ lại như một nguyên tắc an toàn và kiểm chứng cho giải pháp, nhưng không được chọn làm bài toán trung tâm.
+- **Học viên không biết nên ôn lại phần nào — LOẠI:** Pain này được **6/27 người (22,2%)** xác định là khó khăn làm họ mất nhiều thời gian nhất. Một checklist ôn tập có thể giúp học viên tìm đúng nội dung cần xem lại. Tuy nhiên, phạm vi này chỉ giải quyết câu hỏi “cần ôn phần nào”, chưa giải quyết đầy đủ việc học viên không nhớ kiến thức cũ và không hiểu kiến thức đó liên quan như thế nào đến bài học mới.
 
-- **Câu hỏi lặp lại làm mất thời gian của TA — LOẠI:** Nhóm TA có quy mô nhỏ hơn đáng kể so với khoảng **1.000 học viên**. Con số **15–30 phút/ngày** hiện mới là ước tính và chưa có khảo sát hoặc log riêng từ TA để xác minh. Đây được xem là tác động phụ có thể được cải thiện khi giải quyết pain của học viên, thay vì là đối tượng chính của MVP.
+- **Học viên không nhớ buổi trước đã học gì — LOẠI:** Đây là khó khăn lớn nhất của **6/27 người (22,2%)**, đồng thời **23/27 người (85,2%)** không nhớ rõ toàn bộ nội dung buổi trước. Một bản recap có thể hỗ trợ học viên nhớ lại các ý chính, nhưng nếu chỉ tóm tắt nội dung cũ thì học viên vẫn có thể chưa hiểu kiến thức đó được sử dụng như thế nào trong buổi học tiếp theo. Vì vậy, recap được giữ lại như một phần của giải pháp tổng thể, thay vì được chọn làm toàn bộ bài toán trung tâm.
 
 ### Ứng viên được chọn và lý do
 
-Nhóm chọn bài toán **học viên khó nhớ và kết nối kiến thức giữa các buổi học** vì đây là ứng viên có bằng chứng mạnh nhất về **quy mô, tần suất, chi phí và tính khả thi**:
+Nhóm chọn bài toán **học viên khó lấy lại mạch kiến thức và kết nối nội dung giữa các buổi học** vì đây là ứng viên có bằng chứng mạnh nhất về quy mô ảnh hưởng, tần suất, chi phí và tính khả thi:
 
-1. Đối tượng ảnh hưởng chính là khoảng **1.000 học viên K3–K4**, lớn hơn đáng kể so với nhóm TA.
-2. Khảo sát `n = 20` cho thấy **18/20 học viên (90%)** xác nhận có ít nhất một khó khăn cụ thể khi bắt đầu buổi học mới.
-3. **17/20 học viên (85%)** không nhớ rõ toàn bộ nội dung buổi trước.
-4. **14/20 học viên (70%)** gặp tình trạng này từ khoảng một nửa số buổi trở lên.
-5. **10/20 học viên (50%)** mất từ **10 phút trở lên** để lấy lại mạch kiến thức.
-6. Nhóm đã có sẵn **6 transcript, 2 bộ slide và 1.261 lượt chat thuộc 585 hội thoại**, đủ để xây dựng và kiểm thử một MVP recap + bridge trong thời gian hackathon.
-7. **14/20 học viên (70%)** đánh giá giải pháp recap và kết nối kiến thức là hữu ích hoặc rất hữu ích; **19/20 (95%)** cho biết chắc chắn hoặc có thể sử dụng.
+1. **24/27 người (88,9%)** xác nhận gặp ít nhất một khó khăn cụ thể khi bắt đầu buổi học mới.
+2. **23/27 người (85,2%)** không nhớ rõ toàn bộ nội dung buổi trước.
+3. **20/27 người (74,1%)** gặp tình trạng này từ khoảng một nửa số buổi trở lên.
+4. **14/27 người (51,9%)** mất từ **10 phút trở lên** để lấy lại mạch kiến thức.
+5. **11/27 người (40,7%)** không biết nội dung hôm nay liên quan như thế nào đến buổi trước.
+6. **6/27 người (22,2%)** không biết nên ôn lại phần nào.
+7. **6/27 người (22,2%)** không nhớ buổi trước đã học gì.
+8. **18/27 người (66,7%)** đánh giá tính năng recap và kết nối kiến thức là hữu ích hoặc rất hữu ích.
+9. **26/27 người (96,3%)** cho biết chắc chắn hoặc có thể sử dụng tính năng nếu được tích hợp vào VLearn.
+10. Nhóm đã có transcript và slide bài giảng để xây dựng, trích dẫn và kiểm thử một MVP gồm recap kết hợp bridge giữa hai buổi liên tiếp.
 
-Vì vậy, đây là ứng viên tạo tác động trực tiếp lên nhiều người nhất, xảy ra thường xuyên, đã có bằng chứng người dùng xác nhận và có dữ liệu sẵn để triển khai trong phạm vi hackathon.
+Ứng viên được chọn bao phủ đồng thời ba nhu cầu xuất hiện rõ trong khảo sát:
+
+- Nhớ lại những kiến thức quan trọng của buổi trước.
+- Xác định nội dung cần ưu tiên ôn lại.
+- Hiểu mối liên hệ giữa kiến thức cũ và bài học mới.
+
+Phạm vi này tạo tác động rộng hơn hai ứng viên còn lại nhưng vẫn đủ cụ thể để xây dựng và demo trong thời gian hackathon. MVP không cần xử lý toàn bộ lịch sử khóa học mà chỉ tập trung tạo recap và bridge giữa hai buổi liên tiếp, có trích dẫn đến slide hoặc transcript để học viên tự kiểm chứng.
 
 ## §3. Giải pháp tương tự đã nghiên cứu
 - [NotebookLM]: _TODO_
