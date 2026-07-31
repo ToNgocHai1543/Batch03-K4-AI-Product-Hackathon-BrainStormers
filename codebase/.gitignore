@@ -1,2 +1,4 @@
 dist/
 logs/
+.vercel
+.env*

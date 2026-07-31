@@ -21,3 +21,5 @@ scratch_*.txt
 # IDE
 .vscode/
 .idea/
+.vercel
+.env*
