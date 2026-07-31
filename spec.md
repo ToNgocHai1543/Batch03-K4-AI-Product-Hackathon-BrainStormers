@@ -3,7 +3,6 @@ Hướng: [x] A — VLearn  [ ] B — Trợ lý Học viên  [ ] C — Làn mở
 Loại: [x] Tính năng mới
 
 ## §1. User & Job
-## §1. User & Job
 
 - **Job executor + workflow:** Học viên khóa AI Thực Chiến, chủ yếu thuộc K3 và K4, bắt đầu một buổi học mới trên VLearn.
   - **Workflow:** Kết thúc buổi N → Bắt đầu buổi N+1 → Cố nhớ lại nội dung buổi trước → Mở lại slide, ghi chú, video hoặc hỏi bạn bè/trợ giảng → Tiếp tục học sau khi lấy lại được ngữ cảnh, hoặc học trong trạng thái chưa hiểu rõ mối liên hệ giữa các buổi.
