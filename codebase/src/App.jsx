@@ -591,7 +591,10 @@ export default function App() {
                     toDay={currentDay}
                     onRefreshLLM={() => fetchBridgeData(pathMode)}
                     loading={loading}
-                    onSkipBridge={() => setShowBridgeWidget(false)}
+                    onSkipBridge={() => {
+                      setRightPanelTab('tutor');
+                      handleJumpToSlide(1, currentDay.code);
+                    }}
                     onJumpToSlide={handleJumpToSlide}
                   />
                 </div>

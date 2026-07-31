@@ -443,6 +443,43 @@ ${day.summaryContent || ''}
 ${outputFormat}`;
 };
 
+// Helper function to call Gemini API with model fallback if model name is invalid
+const callGeminiAPI = async (apiKey, promptText, maxOutputTokens = 2048) => {
+  const preferredModel = getModelName();
+  const modelsToTry = Array.from(new Set([
+    preferredModel,
+    'gemini-1.5-flash',
+    'gemini-2.0-flash',
+    'gemini-1.5-pro'
+  ]));
+
+  for (const model of modelsToTry) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptText }] }],
+            generationConfig: { temperature: 0.2, maxOutputTokens, responseMimeType: 'application/json' }
+          })
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        if (rawText) {
+          return { rawText, usedModel: model };
+        }
+      }
+    } catch (err) {
+      console.warn(`[Gemini API] Failed for model ${model}:`, err.message);
+    }
+  }
+  return null;
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 //  MAIN LLM SERVICE
 // ─────────────────────────────────────────────────────────────────────────────
@@ -455,7 +492,7 @@ export const llmService = {
       const mockResult = PREBAKED_EXPERIENCE_PATHS[pathMode] || PREBAKED_EXPERIENCE_PATHS.happy;
       logger.logLLMCall({ prompt: `Mock: ${fromDay.code}->${toDay.code} [${pathMode}]`, model: 'prebaked', isRealAPI: false, pathMode }, mockResult, Date.now() - startTime);
       await new Promise(r => setTimeout(r, 400));
-      return { ...mockResult, isRealAPI: false };
+      return { ...mockResult, isRealAPI: false, timestamp: Date.now() };
     }
 
     try {
@@ -472,29 +509,17 @@ OUTPUT JSON DUY NHAT:
 "checklist":[{"id":"ck1","text":"Viec can lam","done":false}],
 "quiz":[{"id":"q1","question":"Cau hoi","options":["A","B","C","D"],"correctAnswer":1,"explanation":"Giai thich"}]}`;
 
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${getModelName()}:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: promptText }] }],
-            generationConfig: { temperature: 0.2, responseMimeType: 'application/json' }
-          })
-        }
-      );
+      const apiResult = await callGeminiAPI(apiKey, promptText, 1024);
+      if (!apiResult) throw new Error('API call failed for all model fallbacks');
 
-      if (!response.ok) throw new Error(`API ${response.status}`);
-      const data = await response.json();
-      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      const parsedJSON = safeParseJSON(rawText);
+      const parsedJSON = safeParseJSON(apiResult.rawText);
       if (!parsedJSON) throw new Error('JSON parse failed');
-      const finalResult = { ...parsedJSON, isRealAPI: true, badgeClass: 'badge-happy' };
-      logger.logLLMCall({ prompt: promptText, model: getModelName(), isRealAPI: true, pathMode: 'happy' }, finalResult, Date.now() - startTime);
+      const finalResult = { ...parsedJSON, isRealAPI: true, badgeClass: 'badge-happy', timestamp: Date.now() };
+      logger.logLLMCall({ prompt: promptText, model: apiResult.usedModel, isRealAPI: true, pathMode: 'happy' }, finalResult, Date.now() - startTime);
       return finalResult;
     } catch (err) {
       console.warn('[VLearn Bridge] Fallback to pre-baked:', err.message);
-      return { ...PREBAKED_EXPERIENCE_PATHS.happy, isRealAPI: false };
+      return { ...PREBAKED_EXPERIENCE_PATHS.happy, isRealAPI: false, timestamp: Date.now() };
     }
   },
 
@@ -519,31 +544,17 @@ OUTPUT JSON DUY NHAT:
     const apiKey = getApiKey();
 
     // Step 3: Gemini API (real key only)
-    if (apiKey && apiKey.startsWith('AIzaSy')) {
+    if (apiKey && apiKey.length > 10) {
       try {
         const promptText = buildTutorPrompt(day, activeQuestion, originalText, hasCorrection);
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${getModelName()}:generateContent?key=${apiKey}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: promptText }] }],
-              generationConfig: { temperature: 0.2, maxOutputTokens: 2048, responseMimeType: 'application/json' }
-            })
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-          const parsed = safeParseJSON(rawText);
+        const apiResult = await callGeminiAPI(apiKey, promptText, 2048);
+        if (apiResult) {
+          const parsed = safeParseJSON(apiResult.rawText);
           const validated = validateTutorResponse(parsed);
           if (validated) {
-            logger.logLLMCall({ prompt: `Q&A: ${activeQuestion}`, model: getModelName(), isRealAPI: true }, validated, Date.now() - startTime);
+            logger.logLLMCall({ prompt: `Q&A: ${activeQuestion}`, model: apiResult.usedModel, isRealAPI: true }, validated, Date.now() - startTime);
             return { ...validated, typoCorrection };
           }
-          console.warn('[Tutor] Gemini validation failed -> Knowledge Base');
         }
       } catch (err) {
         console.warn('[Tutor] Gemini API failed:', err.message);
