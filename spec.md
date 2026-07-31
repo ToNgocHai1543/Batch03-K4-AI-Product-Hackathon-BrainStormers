@@ -70,10 +70,10 @@ Loại: [x] Tính năng mới
 - Case đặc thù domain (④): Thuật ngữ AI dùng đúng như trong tài liệu gốc, không paraphrase sai nghĩa
 
 ## §7. Kiểm thử
-- Chiều chất lượng + định nghĩa kiểm chứng được: _xem eval/README.md_
-- Golden set (≥20 case, file trong eval/): _TODO_
-- Quality bar: "Đạt khi ≥ 80% recap có ít nhất 1 citation chính xác, VÀ 0% bridge chứa thông tin không trace được về tài liệu gốc, VÀ ≥ 70% học viên thử nghiệm xác nhận recap hữu ích."
-- Kết quả các lượt chạy: _TODO — cập nhật đến trước CP6_
+- Chiều chất lượng và cách đo chi tiết: xem `eval/README.md`. Validator tự động kiểm schema, số lượng 5–7 recap/2–4 bridge, giới hạn 300 từ, citation tồn tại đúng phía và fallback. Hai reviewer độc lập kiểm citation thực sự hỗ trợ claim, logic bridge, nghĩa thuật ngữ domain và độ hữu ích.
+- Golden set: `eval/golden_set.json` — đúng 22 case (10 thường, 8 khó với đúng 2 case cho mỗi lớp, 4 hiếm); 10 case thường truy được về chatlog bằng conversation ID ẩn danh. Nội dung đầy đủ được resolve từ `data/` khi chạy, không sao chép data pack vào artifact.
+- Quality bar đã khóa lúc 23:48 ngày 30/07, giữ nguyên: "Đạt khi ≥ 80% recap có ít nhất 1 citation chính xác, VÀ 0% bridge chứa thông tin không trace được về tài liệu gốc, VÀ ≥ 70% học viên thử nghiệm xác nhận recap hữu ích."
+- Kết quả: Round 1 pass tự động 81,8% (18/22), Round 2 pass 100% (22/22); recap có citation tồn tại tăng từ 73,3% lên 100%, bridge không trace được bằng 0. Xem `eval/results_round_1.md`, `eval/results_round_2.md` và JSON live trong `eval/results/`. Citation chính xác chờ đủ hai reviewer; chỉ số hữu ích lấy từ Validation Lead và vẫn là `pending validation` nếu chưa có feedback thật.
 
 ## §8. Phân công & kế hoạch
 - Phân công có tên: _xem phan-cong.md_
