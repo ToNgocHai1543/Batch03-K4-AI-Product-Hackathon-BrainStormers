@@ -76,11 +76,25 @@ Loại: [x] Tính năng mới
 - Kết quả: Round 1 pass tự động 81,8% (18/22), Round 2 pass 100% (22/22); recap có citation tồn tại tăng từ 73,3% lên 100%, bridge không trace được bằng 0. Xem `eval/results_round_1.md`, `eval/results_round_2.md` và JSON live trong `eval/results/`. Citation chính xác chờ đủ hai reviewer; chỉ số hữu ích lấy từ Validation Lead và vẫn là `pending validation` nếu chưa có feedback thật.
 
 ## §8. Phân công & kế hoạch
-- Phân công có tên: _xem phan-cong.md_
-- Willing users (≥3 tên): _TODO_
-- Multi-prototype (nếu làm): _TODO_
+- Phân công có tên:
+  - **Người 1 — Evidence Lead**: Nguyễn Đức Anh
+  - **Người 2 — Spec & Design Lead**: Hải Yến
+  - **Người 3 — Build Lead**: Nguyễn Hải Anh
+  - **Người 4 — Eval & Prompt Lead**: Nông Ngọc Dương
+  - **Người 5 — Validation & Demo Lead**: Tô Ngọc Hải
+- Willing users (khai báo ≥3 tên cụ thể cho User Testing):
+  1. **Nguyễn Đức Hưng** (Học viên khóa AI Thực Chiến K4) — Đã đồng ý tham gia User Testing 10 phút.
+  2. **Phạm Sỹ Đức** (Học viên khóa AI Thực Chiến K3) — Đã đồng ý kiểm thử trải nghiệm recap & bridge.
+  3. **Thạch Minh Quân** (Trợ giảng TA khóa AI Thực Chiến K4) — Đã đồng ý đánh giá tính hữu ích và độ tin cậy trích dẫn slide.
+  4. **Lê Hồng Đức** (Học viên khóa AI Thực Chiến K4) — Dự phòng thử nghiệm giao diện.
+  5. **Dương Quang Hưng** (Học viên khóa AI Thực Chiến K4) — Dự phòng thử nghiệm giao diện.
+- Multi-prototype (nếu làm): Không (Tập trung hoàn thiện 1 Working Prototype cho VLearn Track A)
 
 ## §9. Changelog
 | Thời điểm | Đổi gì | Vì sao |
 |---|---|---|
-| _TODO_ | | |
+| 31/07 12:00 | Khai báo danh sách 5 Willing Users cho vòng User Validation | Đáp ứng yêu cầu Checkpoint CP1 & Rubric R6 (4đ) |
+| 31/07 12:05 | Thêm tính năng nhấp trích dẫn `[slide X]` tự động nhảy tới trang PDF tương ứng | Phản hồi từ Nguyễn Đức Hưng & Phạm Sỹ Đức: Giúp kiểm chứng nguồn tức thì mà không phải tự cuộn tìm thủ công |
+| 31/07 12:10 | Bổ sung phần giải thích chi tiết đáp án kèm slide trích dẫn trong Quiz kiểm tra nhanh | Phản hồi từ Phạm Sỹ Đức: Học viên mong muốn hiểu rõ nguyên lý đằng sau đáp án đúng |
+| 31/07 12:15 | Tối ưu hiển thị badge cảnh báo màu vàng & thông điệp "Dữ liệu mờ" cho Low-confidence path | Áp dụng nguyên tắc HAX G2 & G10: Giúp học viên nhận biết độ tự tin của AI trước khi tin tưởng |
+| 31/07 12:20 | Tích hợp bộ tự sửa lỗi chính tả & chuẩn hóa thuật ngữ tiếng Việt cho VLearn Tutor Q&A | Phản hồi từ Lê Hồng Đức: Giúp AI xử lý mượt mà khi người dùng gõ sai từ (ví dụ "prolem statement" -> "problem statement") |
