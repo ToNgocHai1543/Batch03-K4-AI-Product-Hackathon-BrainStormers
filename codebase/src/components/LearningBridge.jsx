@@ -234,8 +234,8 @@ export default function LearningBridge({
           {bridgeData.bridgeLinks && bridgeData.bridgeLinks.length > 0 ? (
             <div className="grid gap-2 max-h-[420px] overflow-y-auto pr-1">
               {bridgeData.bridgeLinks.map((link) => {
-                const { pageNum: srcPage } = extractSlidePageAndDay(link.sourceRef);
-                const { pageNum: targetPage } = extractSlidePageAndDay(link.targetRef);
+                const { pageNum: srcPage, dayCode: srcDay } = extractSlidePageAndDay(link.sourceRef);
+                const { pageNum: targetPage, dayCode: targetDay } = extractSlidePageAndDay(link.targetRef);
 
                 return (
                   <div 
@@ -245,9 +245,9 @@ export default function LearningBridge({
                     <div className="flex flex-wrap items-center gap-1 text-[13px] font-bold">
                       {srcPage && onJumpToSlide ? (
                         <button 
-                          onClick={() => onJumpToSlide(srcPage)}
+                          onClick={() => onJumpToSlide(srcPage, srcDay)}
                           className="px-2 py-0.5 rounded bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-900 border border-indigo-200 transition-all cursor-pointer flex items-center gap-1 truncate max-w-[140px]"
-                          title={`Bấm để mở Slide trang ${srcPage}`}
+                          title={`Bấm để mở ${srcDay ? srcDay + ' - ' : ''}Slide trang ${srcPage}`}
                         >
                           <span className="truncate">{link.sourceConcept}</span> ({link.sourceRef}) <ExternalLink size={10} className="shrink-0" />
                         </button>
@@ -261,9 +261,9 @@ export default function LearningBridge({
 
                       {targetPage && onJumpToSlide ? (
                         <button 
-                          onClick={() => onJumpToSlide(targetPage)}
+                          onClick={() => onJumpToSlide(targetPage, targetDay)}
                           className="px-2 py-0.5 rounded bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-900 border border-emerald-200 transition-all cursor-pointer flex items-center gap-1 truncate max-w-[140px]"
-                          title={`Bấm để mở Slide trang ${targetPage}`}
+                          title={`Bấm để mở ${targetDay ? targetDay + ' - ' : ''}Slide trang ${targetPage}`}
                         >
                           <span className="truncate">{link.targetConcept}</span> ({link.targetRef}) <ExternalLink size={10} className="shrink-0" />
                         </button>
