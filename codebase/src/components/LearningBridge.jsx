@@ -234,8 +234,8 @@ export default function LearningBridge({
           {bridgeData.bridgeLinks && bridgeData.bridgeLinks.length > 0 ? (
             <div className="grid gap-2 max-h-[420px] overflow-y-auto pr-1">
               {bridgeData.bridgeLinks.map((link) => {
-                const srcPage = extractSlidePage(link.sourceRef);
-                const targetPage = extractSlidePage(link.targetRef);
+                const { pageNum: srcPage } = extractSlidePageAndDay(link.sourceRef);
+                const { pageNum: targetPage } = extractSlidePageAndDay(link.targetRef);
 
                 return (
                   <div 
