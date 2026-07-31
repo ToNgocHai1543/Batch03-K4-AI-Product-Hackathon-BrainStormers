@@ -8,10 +8,10 @@ Loại: [x] Tính năng mới
 - Core JTBD (không tên sản phẩm/AI trong câu): Khi bắt đầu buổi học mới, học viên muốn nhanh chóng nắm lại kiến thức buổi trước và hiểu nó liên quan thế nào đến nội dung hôm nay, để tiếp thu bài mới hiệu quả hơn.
 - Problem statement (KHÔNG chữ AI): Học viên không nhận ra mối liên hệ giữa nội dung các buổi học, dẫn đến kiến thức bị phân mảnh, khó hình thành tư duy hệ thống, và giảm động lực tiếp tục học.
 - Evidence (chuẩn A và/hoặc B — log đầy đủ trong repo):
-  - Khảo sát **n = 20 học viên K3–K4**: **17/20 (85%)** nêu ít nhất một vấn đề liên quan đến mất tính liên tục giữa các buổi — 6/20 (30%) không thấy buổi mới liên quan gì buổi trước; 6/20 (30%) không biết cần ôn phần nào; 5/20 (25%) gần như quên nội dung buổi trước. Ngoài ra, 1/20 (5%) khó tìm lại đúng tài liệu và 2/20 (10%) không gặp khó khăn.
-  - **Tần suất gặp tình trạng (Câu 6):** 9/20 (45%) gần như mọi buổi, 5/20 (25%) khoảng một nửa số buổi, 4/20 (20%) thỉnh thoảng và 2/20 (10%) hiếm khi. Như vậy **14/20 (70%)** gặp pain ở ít nhất khoảng một nửa số buổi.
-  - **Mức hữu ích của tóm tắt tự động (Câu 7):** 6/20 (30%) rất hữu ích, 8/20 (40%) hữu ích, 5/20 (25%) bình thường và 1/20 (5%) rất không hữu ích; gộp hai mức tích cực là **14/20 (70%)**.
-  - **Sẵn sàng sử dụng nếu tích hợp vào VLearn (Câu 8):** 9/20 (45%) chắc chắn có, 10/20 (50%) có thể và 1/20 (5%) chưa chắc; gộp “chắc chắn có/có thể” là **19/20 (95%)**.
+  - Khảo sát **n = 27 học viên K3–K4**: **23/27 (85%)** nêu ít nhất một vấn đề liên quan đến mất tính liên tục giữa các buổi — 11/27 (41%) không thấy buổi mới liên quan gì buổi trước; 6/27 (22%) không biết cần ôn phần nào; 6/27 (22%) gần như quên nội dung buổi trước. Ngoài ra, 1/27 (4%) khó tìm lại đúng tài liệu và 3/27 (11%) không gặp khó khăn. PP1 hiện là pain point lớn nhất và tăng từ 6/20 (30%) lên 11/27 (41%).
+  - **Tần suất gặp tình trạng (Câu 6):** 11/27 (41%) gần như mọi buổi, 9/27 (33%) khoảng một nửa số buổi, 5/27 (19%) thỉnh thoảng và 2/27 (7%) hiếm khi. Như vậy **20/27 (74%)** gặp pain ở ít nhất khoảng một nửa số buổi.
+  - **Mức hữu ích của tóm tắt tự động (Câu 7):** 9/27 (33%) rất hữu ích, 9/27 (33%) hữu ích, 5/27 (19%) bình thường, 1/27 (4%) không hữu ích và 3/27 (11%) rất không hữu ích; gộp hai mức tích cực là **18/27 (67%)**.
+  - **Sẵn sàng sử dụng nếu tích hợp vào VLearn (Câu 8):** 12/27 (44%) chắc chắn có, 14/27 (52%) có thể và 1/27 (4%) chưa chắc; gộp “chắc chắn có/có thể” là **26/27 (96%)**.
   - Ví dụ nguyên văn (mã phản hồi dùng để đối chiếu với survey log; tên/MSSV không đưa vào spec public):
     1. Response #4, K4: “Việc khó khăn nhất là khi chưa kịp nhớ ra buổi trc học gì thì giảng viên đã giảng dạy bài học mới, vì vậy mình phải tự đọc cả 2 bài học cùng một lúc và sẽ gây khó khăn và quá tải nếu bài học quá khó”.
     2. Response #5, K4: “Tôi thường nhớ mang máng, không chắc chắn... tìm lại rất khó khăn, mất khoảng 20-30ph vì không biết tìm ở đâu, do quên kiến thức buổi trước”.
@@ -19,20 +19,22 @@ Loại: [x] Tính năng mới
     4. Response #13, K3: “Thường quên kiến thức, phải mất khoảng 30p để reload lại”.
     5. Response #20: “khi bắt đầu một buổi học mới tôi luôn mơ hồ về việc hôm nay giảng viên đang giảng dạy phần nào và có nhiều buổi gần như tôi không biết giảng viên đang giảng về thứ gì liên quan tới chương trình”.
     6. Response #18: “Tôi xem lại slides trong khoảng 10p trước khi bắt đầu bài học”.
+    7. Phản hồi mới, ẩn danh trong spec: “Nếu như quá lười hoặc bận sau một vài buổi học sẽ ko có kiến thức gì đọng lại và mất thời gian để xem và tìm lại những gì đã học”.
+    8. Phản hồi mới, ẩn danh trong spec: “slide quá nhiều mà không biết tóm tắt là gì nên, không có keyword nên rất khó để hiểu”.
 
 ## §2. Impact & quyết định chọn
 - Bảng impact ≥3 ứng viên:
 
 | Ứng viên | Bao nhiêu người | Tần suất | Tốn gì mỗi lần | Khả thi | Chọn? |
 |---|---|---|---|---|---|
-| Mất liên tục giữa các buổi: không thấy liên hệ, không biết ôn gì hoặc quên bài trước | **17/20 (85%)** trong mẫu; phạm vi tiềm năng ~1.000 HV K3–K4 | **14/20 (70%)** gặp ở ít nhất khoảng một nửa số buổi | Các ví dụ định lượng ghi nhận **10–30 phút/lần**; thêm quá tải và mất mạch kiến thức | Cao — transcript/slide hai buổi có sẵn | ✅ CHỌN |
-| Khó tìm lại đúng tài liệu/ghi chú | **1/20 (5%)** | Chưa có số đếm tần suất riêng | Một phản hồi mất **20–30 phút/lần** | Cao — có thể cải thiện bằng điều hướng/tìm kiếm | ❌ |
-| Không gặp khó khăn khi chuyển buổi | **2/20 (10%)** | Không áp dụng | Không ghi nhận chi phí | Không phải pain cần giải quyết | ❌ |
+| Mất liên tục giữa các buổi: không thấy liên hệ, không biết ôn gì hoặc quên bài trước | **23/27 (85%)** trong mẫu; phạm vi tiềm năng ~1.000 HV K3–K4 | **20/27 (74%)** gặp ở ít nhất khoảng một nửa số buổi | Các ví dụ định lượng ghi nhận **10–30 phút/lần**; thêm quá tải và mất mạch kiến thức | Cao — transcript/slide hai buổi có sẵn | ✅ CHỌN |
+| Khó tìm lại đúng tài liệu/ghi chú | **1/27 (4%)** | Chưa có số đếm tần suất riêng | Một phản hồi mất **20–30 phút/lần** | Cao — có thể cải thiện bằng điều hướng/tìm kiếm | ❌ |
+| Không gặp khó khăn khi chuyển buổi | **3/27 (11%)** | Không áp dụng | Không ghi nhận chi phí | Không phải pain cần giải quyết | ❌ |
 
 - Ứng viên ĐÃ LOẠI:
-  - “Khó tìm tài liệu” chỉ xuất hiện ở **1/20 (5%)**, thấp hơn nhiều so với cụm mất liên tục giữa các buổi; đây cũng có thể giải bằng tìm kiếm/điều hướng mà chưa cần lát cắt AI riêng.
-  - Nhóm **2/20 (10%) không gặp khó khăn** không có pain hoặc chi phí cần xử lý.
-- Ứng viên CHỌN: cụm “mất liên tục giữa các buổi” được chọn vì có **17/20 (85%)** người khảo sát xác nhận một trong ba biểu hiện liên quan, **14/20 (70%)** gặp pain ở ít nhất khoảng một nửa số buổi và các phản hồi định lượng cho thấy mất **10–30 phút/lần**. Hướng giải pháp cũng có tín hiệu chấp nhận ban đầu: **14/20 (70%)** đánh giá tóm tắt tự động hữu ích/rất hữu ích và **19/20 (95%)** chắc chắn/có thể sử dụng nếu tích hợp vào VLearn.
+  - “Khó tìm tài liệu” chỉ xuất hiện ở **1/27 (4%)**, thấp hơn nhiều so với cụm mất liên tục giữa các buổi; đây cũng có thể giải bằng tìm kiếm/điều hướng mà chưa cần lát cắt AI riêng.
+  - Nhóm **3/27 (11%) không gặp khó khăn** không có pain hoặc chi phí cần xử lý.
+- Ứng viên CHỌN: cụm “mất liên tục giữa các buổi” được chọn vì có **23/27 (85%)** người khảo sát xác nhận một trong ba biểu hiện liên quan, **20/27 (74%)** gặp pain ở ít nhất khoảng một nửa số buổi và các phản hồi định lượng cho thấy mất **10–30 phút/lần**. Riêng PP1 “không thấy liên hệ giữa hai buổi” là pain lớn nhất với **11/27 (41%)**. Hướng giải pháp cũng có tín hiệu chấp nhận ban đầu: **18/27 (67%)** đánh giá tóm tắt tự động hữu ích/rất hữu ích và **26/27 (96%)** chắc chắn/có thể sử dụng nếu tích hợp vào VLearn.
 
 ## §3. Giải pháp tương tự đã nghiên cứu
 > Nghiên cứu nhanh từ tài liệu chính thức, rà soát ngày 31/07/2026. Nhóm học theo từng cặp buổi trên VLearn nên chỉ lấy các pattern phù hợp với lát cắt, không sao chép toàn bộ sản phẩm.
@@ -108,6 +110,7 @@ Loại: [x] Tính năng mới
 ## §9. Changelog
 | Thời điểm | Đổi gì | Vì sao |
 |---|---|---|
+| 31/07/2026 — trước CP3 | Mở rộng evidence từ n=20 lên n=27; cập nhật pain (85%), tần suất thường xuyên (74%), mức hữu ích (67%), mức sẵn sàng dùng (96%) và thêm 2 quote | Phản ánh 7 phản hồi mới; PP1 “không thấy liên hệ giữa hai buổi” trở thành pain áp đảo với 11/27 (41%) |
 | 31/07/2026 — trước CP3 | Cập nhật evidence n=20, 6 quote, tần suất (70% gặp thường xuyên), mức hữu ích (70%), mức sẵn sàng dùng (95%) và bảng impact | Thay các ước tính/TODO bằng kết quả khảo sát do Người 1 bàn giao; không công khai tên/MSSV trong spec |
 | 31/07/2026 — trước CP3 | Hoàn thiện benchmark NotebookLM, Khanmigo và ChatGPT Study Mode; chốt khác biệt “đúng thời điểm + đúng cặp nguồn + output ≤3 phút” | Tránh biến lát cắt thành chatbot học tập tổng quát và làm rõ quyết định thiết kế từ sản phẩm tương tự |
 | 31/07/2026 — trước CP3 | Viết lại lát cắt theo đủ 1 user · 1 việc · 1 quyết định AI · 1 kết quả; làm rõ AI đề xuất còn học viên kiểm chứng/quyết định | Khớp lựa chọn **augment** và xử lý cost-of-error khi recap/bridge sai |
