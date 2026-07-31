@@ -3,25 +3,82 @@ Hướng: [x] A — VLearn  [ ] B — Trợ lý Học viên  [ ] C — Làn mở
 Loại: [x] Tính năng mới
 
 ## §1. User & Job
-- Job executor + workflow: Học viên khoá AI Thực Chiến (~1.000 người K3 & K4) bắt đầu buổi học mới trên VLearn.
-  - Workflow: Kết thúc buổi N → Bắt đầu buổi N+1 → Cố nhớ lại buổi trước → Bối rối vì không thấy liên kết → Hỏi TA hoặc bỏ qua.
-- Core JTBD (không tên sản phẩm/AI trong câu): Khi bắt đầu buổi học mới, học viên muốn nhanh chóng nắm lại kiến thức buổi trước và hiểu nó liên quan thế nào đến nội dung hôm nay, để tiếp thu bài mới hiệu quả hơn.
-- Problem statement (KHÔNG chữ AI): Học viên không nhận ra mối liên hệ giữa nội dung các buổi học, dẫn đến kiến thức bị phân mảnh, khó hình thành tư duy hệ thống, và giảm động lực tiếp tục học.
-- Evidence (chuẩn A và/hoặc B — log đầy đủ trong repo):
-  - Số liệu mining / kết quả khảo sát (n = ?, % xác nhận): _TODO — mining chatlog + khảo sát ≥20 người_
-  - ≥5 quote/ví dụ nguyên văn + nguồn: _TODO_
+## §1. User & Job
+
+- **Job executor + workflow:** Học viên khóa AI Thực Chiến, chủ yếu thuộc K3 và K4, bắt đầu một buổi học mới trên VLearn.
+  - **Workflow:** Kết thúc buổi N → Bắt đầu buổi N+1 → Cố nhớ lại nội dung buổi trước → Mở lại slide, ghi chú, video hoặc hỏi bạn bè/trợ giảng → Tiếp tục học sau khi lấy lại được ngữ cảnh, hoặc học trong trạng thái chưa hiểu rõ mối liên hệ giữa các buổi.
+
+- **Core JTBD** *(không tên sản phẩm/AI trong câu):* Khi bắt đầu một buổi học mới, học viên muốn nhanh chóng nhớ lại kiến thức quan trọng của buổi trước và hiểu nội dung đó liên quan như thế nào đến bài học hôm nay, để tiếp thu bài mới hiệu quả mà không phải mất nhiều thời gian tìm lại tài liệu.
+
+- **Problem statement** *(không dùng chữ AI):* Khi bắt đầu buổi học mới, nhiều học viên không nhớ rõ nội dung buổi trước hoặc không nhận ra mối liên hệ giữa các buổi học. Họ phải mở lại slide, ghi chú, video hoặc hỏi người khác để lấy lại ngữ cảnh, làm gián đoạn mạch tư duy, tốn thời gian và giảm hiệu quả tiếp thu kiến thức mới.
+
+- **Evidence** *(chuẩn B — khảo sát người dùng; log đầy đủ tại `evidence/survey_log.md`):*
+  - Khảo sát **20 học viên ngoài nhóm**, gồm **14 học viên K4, 5 học viên K3 và 1 học viên khóa AI khác**.
+  - **17/20 học viên (85%)** không nhớ rõ toàn bộ nội dung buổi trước:
+    - 9 người chỉ nhớ một phần.
+    - 6 người phải xem lại mới nhớ.
+    - 2 người gần như quên hoàn toàn.
+  - **10/20 học viên (50%)** mất từ **10 phút trở lên** để lấy lại mạch kiến thức:
+    - 4 người mất 10–20 phút.
+    - 6 người mất trên 20 phút.
+  - **18/20 học viên (90%)** xác nhận có ít nhất một khó khăn cụ thể khi chuyển sang buổi học mới; chỉ 2 người chọn “Không gặp khó khăn”.
+  - Những khó khăn xuất hiện nhiều nhất:
+    - **6/20** không biết nội dung hôm nay liên quan gì đến buổi trước.
+    - **6/20** không biết nên ôn phần nào.
+    - **5/20** không nhớ buổi trước đã học gì.
+  - **14/20 học viên (70%)** gặp tình trạng này từ khoảng một nửa số buổi trở lên:
+    - 9 người gặp gần như mọi buổi.
+    - 5 người gặp khoảng một nửa số buổi.
+  - **14/20 học viên (70%)** đánh giá phần tóm tắt và kết nối kiến thức giữa các buổi là “Hữu ích” hoặc “Rất hữu ích”.
+  - **19/20 học viên (95%)** cho biết chắc chắn hoặc có thể sử dụng nếu tính năng được tích hợp vào VLearn.
+  - **Mining chatlog:** _TODO — bổ sung số hội thoại liên quan đến ôn lại buổi cũ, phương pháp mining và phân tích `day_code` cross-day._
+
+### Ví dụ nguyên văn từ khảo sát
+
+> “Tôi phải lướt lại hết slide để xem buổi trước học những kiến thức nào.”
+
+> “Việc khó khăn nhất là khi chưa kịp nhớ ra buổi trc học gì thì giảng viên đã giảng dạy bài học mới, vì vậy mình phải tự đọc cả 2 bài học cùng một lúc và sẽ gây khó khăn và quá tải nếu bài học quá khó.”
+
+> “Tôi thường nhớ mang máng, không chắc chắn, phần giảng viên giảng không hiểu dù đã học, nhưng tìm lại rất khó khăn, mất khoảng 20 - 30ph vì không biết tìm ở đâu, do quên kiến thức buổi trước.”
+
+> “Không nhớ bài - Mở slide và hỏi bạn bè - khoảng 20ph.”
+
+> “Tôi quên mất Transformer hoạt động ntn và tôi phải nhờ bạn chỉ lại mất 15p.”
+
+> “Thường quên kiến thức, phải mất khoảng 30p để reload lại.”
+
+> “Khi bắt đầu một buổi học mới tôi luôn mơ hồ về việc hôm nay giảng viên đang giảng dạy phần nào và có nhiều buổi gần như tôi không biết giảng viên đang giảng về thứ gì liên quan tới chương trình.”
 
 ## §2. Impact & quyết định chọn
-- Bảng impact ≥3 ứng viên:
+## §2. Impact & quyết định chọn
 
-| Ứng viên | Bao nhiêu người | Tần suất | Tốn gì mỗi lần | Khả thi | Chọn? |
-|---|---|---|---|---|---|
-| Bài giảng rời rạc, thiếu liên kết | ~1.000 HV | Mỗi buổi | 10–20 phút tìm lại + mất mạch kiến thức | Cao (data sẵn) | ✅ CHỌN |
-| AI tutor trả lời không cite nguồn | ~369 user | Mỗi lần hỏi | Mất niềm tin vào câu trả lời | Cao | ❌ |
-| Câu hỏi lặp tốn thời gian TA | ~50 TA | Hàng ngày | 15–30 phút/ngày | Trung bình | ❌ |
+### Bảng impact các ứng viên
 
-- Ứng viên ĐÃ LOẠI + vì sao: _TODO — điền lý do bằng số_
-- Ứng viên CHỌN + vì sao (bằng số): _TODO_
+| Ứng viên | Quy mô ảnh hưởng | Tần suất xảy ra | Chi phí/tác động mỗi lần | Khả thi trong hackathon | Quyết định |
+|---|---:|---|---|---|---|
+| **Học viên khó nhớ và kết nối kiến thức giữa các buổi học** | Khoảng **1.000 học viên K3–K4**; khảo sát hiện tại `n = 20` cho thấy **18/20 (90%)** xác nhận có khó khăn cụ thể | Mỗi khi bắt đầu buổi học mới; **14/20 (70%)** gặp từ khoảng một nửa số buổi trở lên | **10/20 (50%)** mất từ 10 phút trở lên để lấy lại mạch kiến thức; phải mở lại slide, video, ghi chú hoặc hỏi người khác; làm gián đoạn tư duy | **Cao** — đã có transcript, slide và chatlog; phạm vi MVP có thể giới hạn ở recap và bridge giữa hai buổi liên tiếp | ✅ **CHỌN** |
+| **AI Tutor trả lời nhưng không trích dẫn nguồn** | Khoảng **369 người dùng** trong tập chatlog được cung cấp | Mỗi lần người dùng đặt câu hỏi cần kiểm chứng kiến thức | Người học khó kiểm tra câu trả lời, giảm niềm tin và có nguy cơ tiếp nhận thông tin sai | **Cao** — có thể bổ sung citation từ transcript/slide | ❌ **LOẠI** |
+| **Câu hỏi lặp lại làm mất thời gian của trợ giảng** | Ước tính khoảng **50 TA** | Có thể xảy ra hằng ngày, đặc biệt trước hoặc trong buổi học | Ước tính mất **15–30 phút/TA/ngày** để trả lời các câu hỏi lặp như “buổi trước học gì” hoặc “cần ôn phần nào” | **Trung bình** — cần dữ liệu hội thoại của TA và quy trình vận hành để xác minh đầy đủ | ❌ **LOẠI** |
+
+### Ứng viên đã loại và lý do
+
+- **AI Tutor trả lời nhưng không trích dẫn nguồn — LOẠI:** Ứng viên này có quy mô khoảng **369 người dùng** và khả thi về kỹ thuật, nhưng nhóm hiện chưa có số liệu trực tiếp cho biết bao nhiêu câu trả lời thiếu citation, bao nhiêu người mất niềm tin hoặc mức độ ảnh hưởng thực tế. Trong khi đó, pain về việc nhớ và kết nối kiến thức đã được xác nhận trực tiếp bởi **18/20 học viên (90%)**. Citation được giữ lại như một nguyên tắc an toàn và kiểm chứng cho giải pháp, nhưng không được chọn làm bài toán trung tâm.
+
+- **Câu hỏi lặp lại làm mất thời gian của TA — LOẠI:** Nhóm TA có quy mô nhỏ hơn đáng kể so với khoảng **1.000 học viên**. Con số **15–30 phút/ngày** hiện mới là ước tính và chưa có khảo sát hoặc log riêng từ TA để xác minh. Đây được xem là tác động phụ có thể được cải thiện khi giải quyết pain của học viên, thay vì là đối tượng chính của MVP.
+
+### Ứng viên được chọn và lý do
+
+Nhóm chọn bài toán **học viên khó nhớ và kết nối kiến thức giữa các buổi học** vì đây là ứng viên có bằng chứng mạnh nhất về **quy mô, tần suất, chi phí và tính khả thi**:
+
+1. Đối tượng ảnh hưởng chính là khoảng **1.000 học viên K3–K4**, lớn hơn đáng kể so với nhóm TA.
+2. Khảo sát `n = 20` cho thấy **18/20 học viên (90%)** xác nhận có ít nhất một khó khăn cụ thể khi bắt đầu buổi học mới.
+3. **17/20 học viên (85%)** không nhớ rõ toàn bộ nội dung buổi trước.
+4. **14/20 học viên (70%)** gặp tình trạng này từ khoảng một nửa số buổi trở lên.
+5. **10/20 học viên (50%)** mất từ **10 phút trở lên** để lấy lại mạch kiến thức.
+6. Nhóm đã có sẵn **6 transcript, 2 bộ slide và 1.261 lượt chat thuộc 585 hội thoại**, đủ để xây dựng và kiểm thử một MVP recap + bridge trong thời gian hackathon.
+7. **14/20 học viên (70%)** đánh giá giải pháp recap và kết nối kiến thức là hữu ích hoặc rất hữu ích; **19/20 (95%)** cho biết chắc chắn hoặc có thể sử dụng.
+
+Vì vậy, đây là ứng viên tạo tác động trực tiếp lên nhiều người nhất, xảy ra thường xuyên, đã có bằng chứng người dùng xác nhận và có dữ liệu sẵn để triển khai trong phạm vi hackathon.
 
 ## §3. Giải pháp tương tự đã nghiên cứu
 - [NotebookLM]: _TODO_
