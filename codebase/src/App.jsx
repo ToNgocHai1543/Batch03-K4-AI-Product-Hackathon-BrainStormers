@@ -158,41 +158,6 @@ export default function App() {
 
   return (
     <div className={`h-screen max-h-screen w-screen max-w-screen overflow-hidden flex flex-col font-sans ${isResizingRight ? 'select-none' : ''}`} style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
-      
-      {/* 🔴 SLIM DEMO CONTROLLER BAR */}
-      <div className="bg-slate-900 border-b border-indigo-500/30 px-3 py-1 text-xs text-slate-300 flex flex-wrap items-center justify-between gap-2 shrink-0 z-50">
-        <div className="flex items-center gap-1.5 font-bold text-indigo-400">
-          <Sliders size={14} />
-          <span>DEMO CONTROLLER (4 Path Demo):</span>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-1.5">
-          <button 
-            onClick={() => { setPathMode('happy'); fetchBridgeData('happy'); }}
-            className={`px-2.5 py-0.5 rounded font-semibold text-xs transition-all ${pathMode === 'happy' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
-          >
-            1. Happy Path
-          </button>
-          <button 
-            onClick={() => { setPathMode('lowConfidence'); fetchBridgeData('lowConfidence'); }}
-            className={`px-2.5 py-0.5 rounded font-semibold text-xs transition-all ${pathMode === 'lowConfidence' ? 'bg-amber-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
-          >
-            2. Low-Confidence
-          </button>
-          <button 
-            onClick={() => { setPathMode('failure'); fetchBridgeData('failure'); }}
-            className={`px-2.5 py-0.5 rounded font-semibold text-xs transition-all ${pathMode === 'failure' ? 'bg-cyan-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
-          >
-            3. Failure
-          </button>
-          <button 
-            onClick={() => { setPathMode('boundary'); fetchBridgeData('boundary'); }}
-            className={`px-2.5 py-0.5 rounded font-semibold text-xs transition-all ${pathMode === 'boundary' ? 'bg-rose-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
-          >
-            4. Out-of-Scope
-          </button>
-        </div>
-      </div>
 
       {/* ⚪ HEADER BAR */}
       <header className="bg-white border-b border-slate-200 px-4 py-2 flex items-center justify-between shadow-xs shrink-0 z-40">

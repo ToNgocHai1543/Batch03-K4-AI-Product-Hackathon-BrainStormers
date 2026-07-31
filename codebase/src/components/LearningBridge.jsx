@@ -117,13 +117,7 @@ export default function LearningBridge({
     };
   };
 
-  const getShortPathName = (name) => {
-    if (!name) return 'Happy Path';
-    if (name.includes('Out of Scope') || name.includes('Boundary')) return 'Out-of-Scope';
-    if (name.includes('Low-Confidence')) return 'Low-Confidence';
-    if (name.includes('Failure')) return 'Failure';
-    return 'Happy Path';
-  };
+
 
   return (
     <div className="flex flex-col space-y-3 text-[14px] w-full animate-fade-in">
@@ -136,9 +130,6 @@ export default function LearningBridge({
           <div className="flex items-center gap-1.5 overflow-hidden">
             <span className="px-2 py-0.5 rounded-full text-[12px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/80 flex items-center gap-1 whitespace-nowrap">
               <Sparkles size={11} className="text-indigo-600 shrink-0" /> AI Bridge
-            </span>
-            <span className="px-2 py-0.5 rounded-full text-[12px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 whitespace-nowrap">
-              {getShortPathName(bridgeData.pathName)}
             </span>
           </div>
         </div>
