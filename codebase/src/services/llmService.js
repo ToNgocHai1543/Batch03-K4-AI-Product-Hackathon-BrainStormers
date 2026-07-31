@@ -499,7 +499,7 @@ export const llmService = {
    */
   generateLearningBridge: async ({ fromDay, toDay, pathMode = 'happy', forceMock = false }) => {
     const startTime = Date.now();
-    await new Promise((r) => setTimeout(r, 280));
+    await new Promise((r) => setTimeout(r, 1500));
 
     if (pathMode !== 'happy') {
       const mockResult = PREBAKED_EXPERIENCE_PATHS[pathMode] || PREBAKED_EXPERIENCE_PATHS.happy;
@@ -550,7 +550,7 @@ export const llmService = {
    */
   generateBridgeQuiz: async ({ fromDay, toDay, count = 3 }) => {
     const startTime = Date.now();
-    await new Promise((r) => setTimeout(r, 220));
+    await new Promise((r) => setTimeout(r, 1500));
 
     const quiz = sampleQuizSet(count);
     const result = {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   CheckSquare, Sparkles, HelpCircle, ThumbsDown, FileText, ArrowRight,
-  ExternalLink, Bot
+  ExternalLink, Bot, Loader2
 } from 'lucide-react';
 import FeedbackModal from './FeedbackModal';
 import { llmService } from '../services/llmService';
@@ -200,8 +200,20 @@ export default function LearningBridge({
         </button>
       </div>
 
-      {/* 📄 TAB 1: RECAP POINTS */}
-      {activeTab === 'recap' && (
+      {/* Tab Contents Area with Loading Overlay */}
+      <div className="relative min-h-[220px] flex-1 flex flex-col">
+        {(loading || (activeTab === 'checklist' && quizLoading)) && (
+          <div className="absolute inset-0 bg-white/75 backdrop-blur-[1px] flex flex-col items-center justify-center z-30 rounded-xl space-y-2 py-8 transition-all">
+            <Loader2 className="animate-spin text-indigo-600" size={28} />
+            <div className="text-[13px] font-bold text-slate-800 animate-pulse">
+              {activeTab === 'checklist' ? 'AI đang thiết lập bộ câu hỏi ôn tập...' : 'AI đang phân tích dữ liệu & xây dựng cầu nối...'}
+            </div>
+            <div className="text-[11px] text-slate-400">Vui lòng chờ trong giây lát</div>
+          </div>
+        )}
+
+        {/* 📄 TAB 1: RECAP POINTS */}
+        {activeTab === 'recap' && (
         <div className="space-y-2 animate-fade-in">
           <div className="flex items-center justify-between text-[12px] text-slate-500 px-0.5">
             <span>{bridgeData.recap?.length || 0} ý cốt lõi có trích dẫn</span>
@@ -450,6 +462,7 @@ export default function LearningBridge({
           )}
         </div>
       )}
+      </div>
 
       {/* Feedback Modal */}
       <FeedbackModal 
