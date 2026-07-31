@@ -8,66 +8,91 @@ Loại: [x] Tính năng mới
 - Core JTBD (không tên sản phẩm/AI trong câu): Khi bắt đầu buổi học mới, học viên muốn nhanh chóng nắm lại kiến thức buổi trước và hiểu nó liên quan thế nào đến nội dung hôm nay, để tiếp thu bài mới hiệu quả hơn.
 - Problem statement (KHÔNG chữ AI): Học viên không nhận ra mối liên hệ giữa nội dung các buổi học, dẫn đến kiến thức bị phân mảnh, khó hình thành tư duy hệ thống, và giảm động lực tiếp tục học.
 - Evidence (chuẩn A và/hoặc B — log đầy đủ trong repo):
-  - Số liệu mining / kết quả khảo sát (n = ?, % xác nhận): _TODO — mining chatlog + khảo sát ≥20 người_
-  - ≥5 quote/ví dụ nguyên văn + nguồn: _TODO_
+  - Khảo sát **n = 20 học viên K3–K4**: **17/20 (85%)** nêu ít nhất một vấn đề liên quan đến mất tính liên tục giữa các buổi — 6/20 (30%) không thấy buổi mới liên quan gì buổi trước; 6/20 (30%) không biết cần ôn phần nào; 5/20 (25%) gần như quên nội dung buổi trước. Ngoài ra, 1/20 (5%) khó tìm lại đúng tài liệu và 2/20 (10%) không gặp khó khăn.
+  - **Tần suất gặp tình trạng (Câu 6):** 9/20 (45%) gần như mọi buổi, 5/20 (25%) khoảng một nửa số buổi, 4/20 (20%) thỉnh thoảng và 2/20 (10%) hiếm khi. Như vậy **14/20 (70%)** gặp pain ở ít nhất khoảng một nửa số buổi.
+  - **Mức hữu ích của tóm tắt tự động (Câu 7):** 6/20 (30%) rất hữu ích, 8/20 (40%) hữu ích, 5/20 (25%) bình thường và 1/20 (5%) rất không hữu ích; gộp hai mức tích cực là **14/20 (70%)**.
+  - **Sẵn sàng sử dụng nếu tích hợp vào VLearn (Câu 8):** 9/20 (45%) chắc chắn có, 10/20 (50%) có thể và 1/20 (5%) chưa chắc; gộp “chắc chắn có/có thể” là **19/20 (95%)**.
+  - Ví dụ nguyên văn (mã phản hồi dùng để đối chiếu với survey log; tên/MSSV không đưa vào spec public):
+    1. Response #4, K4: “Việc khó khăn nhất là khi chưa kịp nhớ ra buổi trc học gì thì giảng viên đã giảng dạy bài học mới, vì vậy mình phải tự đọc cả 2 bài học cùng một lúc và sẽ gây khó khăn và quá tải nếu bài học quá khó”.
+    2. Response #5, K4: “Tôi thường nhớ mang máng, không chắc chắn... tìm lại rất khó khăn, mất khoảng 20-30ph vì không biết tìm ở đâu, do quên kiến thức buổi trước”.
+    3. Response #8, K4: “Tôi quên mất Transformer hoạt động ntn và tôi phải nhờ bạn chỉ lại mất 15p”.
+    4. Response #13, K3: “Thường quên kiến thức, phải mất khoảng 30p để reload lại”.
+    5. Response #20: “khi bắt đầu một buổi học mới tôi luôn mơ hồ về việc hôm nay giảng viên đang giảng dạy phần nào và có nhiều buổi gần như tôi không biết giảng viên đang giảng về thứ gì liên quan tới chương trình”.
+    6. Response #18: “Tôi xem lại slides trong khoảng 10p trước khi bắt đầu bài học”.
 
 ## §2. Impact & quyết định chọn
 - Bảng impact ≥3 ứng viên:
 
 | Ứng viên | Bao nhiêu người | Tần suất | Tốn gì mỗi lần | Khả thi | Chọn? |
 |---|---|---|---|---|---|
-| Bài giảng rời rạc, thiếu liên kết | ~1.000 HV | Mỗi buổi | 10–20 phút tìm lại + mất mạch kiến thức | Cao (data sẵn) | ✅ CHỌN |
-| AI tutor trả lời không cite nguồn | ~369 user | Mỗi lần hỏi | Mất niềm tin vào câu trả lời | Cao | ❌ |
-| Câu hỏi lặp tốn thời gian TA | ~50 TA | Hàng ngày | 15–30 phút/ngày | Trung bình | ❌ |
+| Mất liên tục giữa các buổi: không thấy liên hệ, không biết ôn gì hoặc quên bài trước | **17/20 (85%)** trong mẫu; phạm vi tiềm năng ~1.000 HV K3–K4 | **14/20 (70%)** gặp ở ít nhất khoảng một nửa số buổi | Các ví dụ định lượng ghi nhận **10–30 phút/lần**; thêm quá tải và mất mạch kiến thức | Cao — transcript/slide hai buổi có sẵn | ✅ CHỌN |
+| Khó tìm lại đúng tài liệu/ghi chú | **1/20 (5%)** | Chưa có số đếm tần suất riêng | Một phản hồi mất **20–30 phút/lần** | Cao — có thể cải thiện bằng điều hướng/tìm kiếm | ❌ |
+| Không gặp khó khăn khi chuyển buổi | **2/20 (10%)** | Không áp dụng | Không ghi nhận chi phí | Không phải pain cần giải quyết | ❌ |
 
-- Ứng viên ĐÃ LOẠI + vì sao: _TODO — điền lý do bằng số_
-- Ứng viên CHỌN + vì sao (bằng số): _TODO_
+- Ứng viên ĐÃ LOẠI:
+  - “Khó tìm tài liệu” chỉ xuất hiện ở **1/20 (5%)**, thấp hơn nhiều so với cụm mất liên tục giữa các buổi; đây cũng có thể giải bằng tìm kiếm/điều hướng mà chưa cần lát cắt AI riêng.
+  - Nhóm **2/20 (10%) không gặp khó khăn** không có pain hoặc chi phí cần xử lý.
+- Ứng viên CHỌN: cụm “mất liên tục giữa các buổi” được chọn vì có **17/20 (85%)** người khảo sát xác nhận một trong ba biểu hiện liên quan, **14/20 (70%)** gặp pain ở ít nhất khoảng một nửa số buổi và các phản hồi định lượng cho thấy mất **10–30 phút/lần**. Hướng giải pháp cũng có tín hiệu chấp nhận ban đầu: **14/20 (70%)** đánh giá tóm tắt tự động hữu ích/rất hữu ích và **19/20 (95%)** chắc chắn/có thể sử dụng nếu tích hợp vào VLearn.
 
 ## §3. Giải pháp tương tự đã nghiên cứu
-- [NotebookLM]: _TODO_
-- [Khanmigo]: _TODO_
-- [ChatGPT study mode]: _TODO_
+> Nghiên cứu nhanh từ tài liệu chính thức, rà soát ngày 31/07/2026. Nhóm học theo từng cặp buổi trên VLearn nên chỉ lấy các pattern phù hợp với lát cắt, không sao chép toàn bộ sản phẩm.
+
+| Giải pháp | Flow giải job | Đáng học | Đáng né / giới hạn | AI Learning Bridge khác gì |
+|---|---|---|---|---|
+| [NotebookLM](https://support.google.com/notebooklm/answer/16164461) | Người dùng tải/chọn PDF, slide, website, video hoặc ghi chú → hỏi trong notebook → nhận câu trả lời dựa trên nguồn, có citation; có thể tạo study guide, mind map, flashcard/quiz | Grounding theo tập nguồn do người dùng chọn; citation nằm cạnh nội dung và mở được đúng ngữ cảnh để kiểm chứng | Người học phải chủ động tạo notebook, nạp/chọn nguồn và đặt câu hỏi; nếu nhiều nguồn hoặc câu hỏi mơ hồ, hệ thống có thể không tìm đúng phần liên quan. Không có flow mặc định nối buổi N với N+1 trên VLearn | Tự kích hoạt tại thời điểm học viên mở buổi N+1; nguồn đã được giới hạn vào tài liệu hai buổi; output cố định ở recap + 2–4 bridge + checklist, đọc trong ≤3 phút |
+| [Khanmigo](https://support.khanacademy.org/hc/en-us/articles/13860282793869-What-are-the-Community-Guidelines-for-Khanmigo) | Học viên mở trợ lý trong ngữ cảnh bài học/bài tập → Khanmigo dùng câu hỏi, gợi ý và giải thích để dẫn dắt → học viên trả lời qua nhiều lượt và tự đi đến kết quả | Không đưa đáp án ngay; dùng câu hỏi kiểu Socratic và “productive struggle” để giữ vai trò chủ động của người học; trợ giúp nằm trong ngữ cảnh học tập | Hội thoại nhiều lượt không phù hợp khi học viên chỉ có vài phút để lấy lại mạch kiến thức; Khan Academy cũng khuyến nghị không coi Khanmigo là nguồn duy nhất và phải kiểm tra thêm nguồn | Không đóng vai tutor tổng quát và không kéo dài hội thoại; chỉ làm cầu nối ngắn giữa hai buổi, luôn kèm căn cứ từ transcript/slide và cho phép bỏ qua |
+| [ChatGPT Study Mode](https://help.openai.com/en/articles/11780217-study-mode) | Người học bật Study Mode, nêu mục tiêu/trình độ và có thể tải tài liệu → hệ thống hỏi điều đã biết, hướng dẫn từng bước → đặt câu hỏi mở/quiz để kiểm tra mức hiểu | Chia nhỏ kiến thức, điều chỉnh độ sâu, hỏi kiểm tra hiểu và khuyến khích suy luận thay vì chỉ trả đáp án | Phụ thuộc vào việc người học mô tả mục tiêu và cung cấp đúng context; tài liệu chính thức lưu ý hệ thống vẫn có thể sai hoặc đôi lúc trả lời thẳng. Đây là trải nghiệm chat rộng, không bảo đảm tự nối đúng hai buổi của một khóa | VLearn biết sẵn học viên đang mở buổi nào và buổi trước là gì; hệ thống chủ động tạo một artifact có cấu trúc, có citation và fallback khi không đủ căn cứ, không yêu cầu người học prompt |
+
+**Kết luận thiết kế:** kết hợp pattern “grounded citation” của NotebookLM với cách giữ quyền chủ động cho người học của Khanmigo/Study Mode; không chọn trải nghiệm chatbot mở. Lợi thế của lát cắt là **đúng thời điểm chuyển buổi + đúng cặp nguồn + output ngắn, cố định và kiểm chứng được**.
 
 ## §4. Thiết kế
-- Lát cắt MỘT CÂU: Một học viên bắt đầu buổi Day 02 trên VLearn · AI tự động hiển thị recap Day 01 + bridge chỉ ra kiến thức Day 01 nào là nền tảng cho Day 02 kèm trích dẫn cụ thể · giúp học viên nắm được mạch kiến thức trong ≤3 phút thay vì tự tìm 15 phút.
+- Lát cắt MỘT CÂU: Khi một học viên bắt đầu Day 02 trên VLearn, hệ thống dùng tài liệu Day 01–02 để đề xuất recap Day 01 và 2–4 bridge có trích dẫn, giúp học viên tự kiểm chứng và nắm lại mạch kiến thức trong ≤3 phút thay vì tự tìm khoảng 15 phút.
 - Non-goals (≥3):
   1. Không build lại toàn bộ UI của VLearn
   2. Không tạo hệ thống chấm điểm chính thức
   3. Không thay thế vai trò giảng viên
   4. Không xây chatbot Q&A tổng quát
 - Mức prototype nhắm tới: [ ] Sketch [x] Mock [ ] Working — phần mock: UI hiển thị, knowledge map; phần thật: LLM call sinh recap/bridge
-- Automation: [x] augment [ ] conditional [ ] automate — lý do: recap/bridge sai kiến thức → học viên ôn sai → chi phí lỗi trung bình–cao. AI sinh, kèm trích dẫn để user tự kiểm tra.
+- Automation: [x] augment [ ] conditional [ ] automate — AI đề xuất recap/bridge nhưng học viên quyết định đọc, kiểm tra nguồn hoặc bỏ qua. Nếu nội dung sai, khoảng 1.000 học viên có thể ôn sai nền tảng cho buổi sau và TA phải sửa lại; vì chi phí lỗi trung bình–cao, mỗi ý phải có citation, trạng thái thiếu căn cứ phải thu hẹp output và kết quả không được dùng để chấm điểm chính thức.
 - §4b. Nguyên tắc đã áp dụng (≥4):
 
 | Nguyên tắc | Áp cụ thể vào đâu trong prototype |
 |---|---|
-| G2 — Làm rõ nó làm tốt đến đâu | Mỗi ý recap kèm [trang/đoạn] trích dẫn → user biết kiểm lại ở đâu |
-| G10 — Thu hẹp phạm vi khi nghi ngờ | Transcript thiếu → hiển thị "Chưa đủ dữ liệu, xem lại slide gốc" |
-| G8 — Gạt bỏ dễ dàng | Nút "Bỏ qua recap" luôn hiện, không chặn flow vào bài mới |
-| G11 — Giải thích vì sao | Bridge map ghi "vì Day 01 slide 20 nói về giới hạn bẩm sinh → Day 02 dùng để phân tích khi nào AI không phù hợp" |
-| G15 — Mời feedback chi tiết | Nút 👍👎 + "Sai chỗ nào?" sau mỗi recap |
+| G2 — Làm rõ nó làm tốt đến đâu | Header ghi “Tạo từ tài liệu Day 01–02”; mỗi ý recap/bridge kèm `[slide/trang/đoạn]` để học viên biết phạm vi và kiểm lại |
+| G10 — Thu hẹp phạm vi khi nghi ngờ | Transcript/slide thiếu hoặc không tìm thấy overlap → giảm số ý và hiện “Chưa đủ dữ liệu để kết luận” thay vì đoán |
+| G8 — Gạt bỏ dễ dàng | Nút “Bỏ qua recap, vào bài học” luôn hiện; lỗi AI không chặn flow vào Day 02 |
+| G9 — Sửa dễ dàng | Sau khi chọn 👎, học viên chọn ý sai/nhập sửa ngắn ngay tại output thay vì phải mở luồng hỗ trợ khác |
+| G11 — Giải thích vì sao | Mỗi cạnh bridge có câu “Day 01 [nguồn A] là nền tảng cho Day 02 [nguồn B] vì…” và mở được hai nguồn |
+| G15 — Mời feedback chi tiết | 👍/👎 sau recap; khi chọn 👎 hệ thống hỏi “Ý nào sai hoặc chưa rõ?” và ghi nhận đúng mục được chọn |
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản (≥8)
 
+| Lớp | Rủi ro trong lát cắt | Quy tắc đường lui |
+|---|---|---|
+| ① Nguồn sự thật | Recap/bridge bịa ý hoặc gắn sai citation | Chỉ hiển thị điều truy ngược được về tài liệu; không có căn cứ thì không kết luận |
+| ② Mơ hồ/thiếu thông tin | Transcript ngắn, slide thiếu hoặc đoạn được chọn không đủ ngữ cảnh | Nói rõ thiếu gì, thu hẹp output và đưa link tài liệu gốc |
+| ③ Ngoài phạm vi/thẩm quyền | Người dùng đòi giải bài, chấm điểm hoặc hỏi ngoài tài liệu khóa học | Từ chối phần ngoài phạm vi, nhắc lại feature làm được gì và cho phép vào bài |
+| ④ Đặc thù domain | Sai thuật ngữ AI làm học viên hình thành nền tảng sai | Giữ nguyên thuật ngữ/định nghĩa nguồn; tách các khái niệm gần nhau và cite riêng |
+
 | # | Tình huống cụ thể | Lớp | Hành vi mong muốn | Nguyên tắc |
 |---|---|---|---|---|
-| 1 | AI bịa liên kết giữa 2 buổi không liên quan | ① | Không đưa ra liên kết, hiển thị "Hai buổi này ít overlap" | G10 |
-| 2 | AI trích dẫn sai trang slide | ① | Mọi citation phải match nội dung gốc | G2 |
-| 3 | Transcript buổi bị thiếu/ngắn | ② | Báo rõ "Dữ liệu buổi này chưa đầy đủ" + link slide gốc | G10 |
-| 4 | Học viên highlight đoạn mơ hồ, hỏi "liên quan gì buổi sau?" | ② | Trả lời "Chưa đủ thông tin để xác định" thay vì đoán | G10 |
-| 5 | Hỏi nội dung ngoài khóa học | ③ | "Mình chỉ hỗ trợ nội dung khóa AI Thực Chiến" | G10 |
-| 6 | Yêu cầu AI viết bài tập hộ | ③ | Từ chối + gợi ý "Bạn có thể ôn lại recap rồi thử tự làm" | G8 |
-| 7 | Nhầm "attention mechanism" (kỹ thuật) với "attention" (chú ý thông thường) | ④ | Dùng đúng thuật ngữ như trong transcript gốc | G2 |
-| 8 | Recap gộp Chain-of-Thought với Prompt Engineering thành 1 khái niệm | ④ | Giữ tách biệt, cite đúng slide từng khái niệm | G11 |
-| 9 | Học viên bỏ 2 buổi liên tiếp, quay lại buổi N+2 | Hiếm | Sinh recap cả 2 buổi bỏ lỡ + bridge tích lũy | G2 |
+| 1 | Hai buổi gần như không liên quan nhưng mô hình bịa một bridge nghe hợp lý | ① | Không hiện cạnh bridge; ghi “Chưa tìm thấy liên kết đủ căn cứ giữa hai buổi” và cho vào bài | G10 |
+| 2 | Nội dung recap đúng nhưng citation trỏ nhầm trang/đoạn | ① | Đánh dấu ý đó là không đạt, không hiển thị như kết quả tin cậy; cho mở đúng nguồn hoặc gửi 👎 tại ý | G2, G9 |
+| 3 | Transcript Day 01 bị thiếu nửa cuối hoặc quá ngắn | ② | Hiện banner “Dữ liệu Day 01 chưa đầy đủ”; chỉ tóm tắt phần có nguồn và đưa link slide gốc | G10 |
+| 4 | Một slide chỉ có tiêu đề, không đủ dữ kiện để xác định quan hệ với Day 02 | ② | Bỏ bridge đó và ghi “Chưa đủ thông tin để xác định”; không suy diễn từ tiêu đề | G10 |
+| 5 | Học viên hỏi một kiến thức không xuất hiện trong tài liệu Day 01–02 | ③ | “Nội dung này nằm ngoài tài liệu Day 01–02 nên mình chưa thể kết luận”; cho mở bài hoặc tài liệu gốc | G2, G10 |
+| 6 | Học viên yêu cầu làm hộ bài tập hoặc chấm điểm chính thức | ③ | Từ chối làm/chấm hộ; gợi ý xem recap, mở bài tập và tự thử bước đầu | G8 |
+| 7 | Mô hình nhầm “attention mechanism” với “attention” theo nghĩa chú ý thông thường | ④ | Giữ thuật ngữ đúng như nguồn, kèm định nghĩa và citation; không dùng bản diễn giải gây đổi nghĩa | G2, G11 |
+| 8 | Recap gộp Chain-of-Thought và Prompt Engineering thành một khái niệm | ④ | Tách thành hai ý, mỗi ý có nguồn riêng; nếu nguồn không phân biệt rõ thì báo mơ hồ | G10, G11 |
+| 9 | Học viên bỏ hai buổi liên tiếp rồi mở Day N+2 | Hiếm | Không nhồi toàn bộ lịch sử vào một recap; hiển thị hai recap rút gọn theo thứ tự và bridge tích lũy, có nút bỏ qua | G2, G8 |
 
 ## §6. Bốn đường đi của trải nghiệm
-- Happy path: Học viên vào buổi N+1 → thấy recap buổi N (5–7 ý, có cite) + bridge map (2–4 liên kết) + checklist → đọc 3 phút → bắt đầu bài mới
-- Low-confidence (②): Transcript thiếu → hiển thị recap ngắn + warning "Dữ liệu chưa đầy đủ" + link xem slide gốc
-- Failure/không căn cứ (①): AI không tìm được liên kết → "Hai buổi này ít overlap — bạn có thể bắt đầu buổi mới ngay"
-- Correction (user sửa): 👎 → "Sai chỗ nào?" → log lại → cải thiện prompt
-- Khi bị đòi ngoài phạm vi (③): "Mình chỉ hỗ trợ nội dung khóa AI Thực Chiến — câu này ngoài phạm vi mình nhé!"
-- Case đặc thù domain (④): Thuật ngữ AI dùng đúng như trong tài liệu gốc, không paraphrase sai nghĩa
+- **Happy path:** Học viên mở Day N+1 → header cho biết hệ thống dùng tài liệu Day N–N+1 → xem recap Day N gồm 5–7 ý có citation → xem 2–4 bridge, mỗi bridge có nguồn ở cả hai buổi → xem checklist → chọn “Bắt đầu bài mới” trong ≤3 phút.
+- **Low-confidence (②):** Hệ thống phát hiện transcript/slide thiếu → banner nêu rõ buổi nào thiếu dữ liệu → chỉ hiện các ý có căn cứ với nhãn “Bản rút gọn” → học viên chọn “Xem tài liệu gốc” hoặc “Bỏ qua, vào bài”.
+- **Failure/không căn cứ (①):** Không tìm thấy bridge đủ căn cứ → không dựng knowledge map giả → hiện “Chưa tìm thấy liên kết đủ căn cứ giữa hai buổi” → đưa link hai nguồn và nút vào bài mới.
+- **Correction:** Học viên chọn 👎 tại một ý → chọn lý do “Sai nội dung / Sai nguồn / Khó hiểu” và có thể nhập sửa ngắn → hệ thống xác nhận đã ghi nhận, giữ nút mở nguồn và không tự tuyên bố rằng nội dung đã được sửa đúng.
+- **Khi bị đòi ngoài phạm vi (③):** Hệ thống nêu “Mình chỉ tạo recap và cầu nối từ tài liệu Day N–N+1” → từ chối làm hộ/chấm điểm/trả lời ngoài nguồn → đưa học viên về recap hoặc bài học.
+- **Case đặc thù domain (④):** Thuật ngữ AI được giữ đúng như tài liệu; các khái niệm gần nhau nằm ở các ý riêng với citation riêng; khi nguồn mâu thuẫn, hệ thống nêu mâu thuẫn thay vì tự chọn một định nghĩa.
 
 ## §7. Kiểm thử
 - Chiều chất lượng + định nghĩa kiểm chứng được: _xem eval/README.md_
@@ -83,4 +108,8 @@ Loại: [x] Tính năng mới
 ## §9. Changelog
 | Thời điểm | Đổi gì | Vì sao |
 |---|---|---|
-| _TODO_ | | |
+| 31/07/2026 — trước CP3 | Cập nhật evidence n=20, 6 quote, tần suất (70% gặp thường xuyên), mức hữu ích (70%), mức sẵn sàng dùng (95%) và bảng impact | Thay các ước tính/TODO bằng kết quả khảo sát do Người 1 bàn giao; không công khai tên/MSSV trong spec |
+| 31/07/2026 — trước CP3 | Hoàn thiện benchmark NotebookLM, Khanmigo và ChatGPT Study Mode; chốt khác biệt “đúng thời điểm + đúng cặp nguồn + output ≤3 phút” | Tránh biến lát cắt thành chatbot học tập tổng quát và làm rõ quyết định thiết kế từ sản phẩm tương tự |
+| 31/07/2026 — trước CP3 | Viết lại lát cắt theo đủ 1 user · 1 việc · 1 quyết định AI · 1 kết quả; làm rõ AI đề xuất còn học viên kiểm chứng/quyết định | Khớp lựa chọn **augment** và xử lý cost-of-error khi recap/bridge sai |
+| 31/07/2026 — trước CP3 | Cụ thể hóa 6 nguyên tắc HAX/PAIR thành thành phần UI/hành vi có thể kiểm tra | Đáp ứng yêu cầu mỗi nguyên tắc phải trỏ được vào vị trí cụ thể, không chỉ nêu tên |
+| 31/07/2026 — trước CP3 | Bổ sung định nghĩa 4 lớp, làm rõ 9 kịch bản và 4 đường đi với thông báo + hành động tiếp theo | Để prototype/eval có đặc tả hành vi rõ ràng; không thay đổi prompt, golden set hay kết quả đo |
